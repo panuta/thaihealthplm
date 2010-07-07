@@ -1,11 +1,11 @@
 from django.db import models
 
 class Sector(models.Model):
-    ref_no = models.CharField(max_length=100)
+    ref_no = models.IntegerField()
     name = models.CharField(max_length=500)
 
 class MasterPlan(models.Model):
-    ref_no = models.CharField(max_length=100)
+    ref_no = models.IntegerField()
     name = models.CharField(max_length=500)
 
 class SectorMasterPlan(models.Model):

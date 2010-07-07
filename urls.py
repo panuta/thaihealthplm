@@ -10,11 +10,12 @@ admin.autodiscover()
 from homepage.views import view_homepage
 
 urlpatterns = patterns('',
-    #(r'^', include('thaihealthsms.accounts.urls')),
-    #(r'^', include('thaihealthsms.domain.urls')),
-    #(r'^', include('thaihealthsms.budget.urls')),
-    #(r'^', include('thaihealthsms.kpi.urls')),
-    #(r'^', include('thaihealthsms.progress.urls')),
+    (r'^', include('thaihealthplm.accounts.urls')),
+    (r'^', include('thaihealthplm.administration.urls')),
+    #(r'^', include('thaihealthplm.domain.urls')),
+    #(r'^', include('thaihealthplm.budget.urls')),
+    #(r'^', include('thaihealthplm.kpi.urls')),
+    #(r'^', include('thaihealthplm.progress.urls')),
     
     (r'^accounts/', include('registration.backends.default.urls')),
     

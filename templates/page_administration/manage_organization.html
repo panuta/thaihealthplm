@@ -1,0 +1,81 @@
+{% extends 'page_base.html' %}
+{% load helper_tags tab_tags %}
+
+{% block html_head %}
+
+{% endblock %}
+
+{% block body_subtitle %}การจัดการระบบ{% endblock %}
+{% block body_title %}โครงสร้างองค์กร{% endblock %}
+
+{% block body_tabs %}{% tabs_for_administration page %}{% endblock %}
+
+
+{% block body_content %}
+<div class="ss_control_panel">
+    <ul>
+        <li><img src="{{MEDIA_URL}}/images/icons/create.png" class="icon"/><a href="{% url view_administration_organization_add_sector %}">เพิ่มสำนัก</a></li>
+        {% if sectors %}<li><img src="{{MEDIA_URL}}/images/icons/create.png" class="icon"/><a href="{% url view_administration_organization_add_masterplan %}">เพิ่มแผนหลัก</a></li>{% endif %}
+    </ul>
+</div>
+
+<div class="admin_org_page">
+    <h2>แผนหลัก</h2>
+    {% if master_plans %}
+    <table class="ss_table">
+        <tr>
+            <th></th>
+            <th class="ref_no">เลขที่แผน</th>
+            <th class="name">ชื่อแผน</th>
+            <th class="sector">สำนักที่ดูแล</th>
+            <th class="manage"></th>
+        </tr>
+        {% for master_plan in master_plans %}
+        <tr>
+            <td class="controls">
+                <a href="{% url view_administration_organization_edit_masterplan master_plan.id %}" title="แก้ไขแผนหลัก"><img src="{{MEDIA_URL}}/images/icon_edit.png" class="icon" /></a>
+                {% if master_plan.has_child %}
+                <img src="{{MEDIA_URL}}/images/icon_delete_disabled.gif" class="icon" title="ไม่สามารถลบแผนหลักที่มีหน่วยงานภายใต้ได้"/>
+                {% else %}
+                <a href="{% url view_administration_organization_delete_masterplan master_plan.id %}" title="ลบแผนหลัก" class="delete-master-plan"><img src="{{MEDIA_URL}}/images/icon_delete.png" class="icon" /></a>
+                {% endif %}
+            </td>
+            <td class="ref_no">{{master_plan.ref_no}}</td>
+            <td class="name"><a href="#">{{master_plan.name}}</a></td>
+            <td class="sector">{{master_plan.sectors|join:", "}}</td>
+            <td class="manage"><img src="{{MEDIA_URL}}/images/sector_manage.png" class="icon"/> <a href="#">หน้าจัดการแผนหลัก</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="ss_no_information">ไม่มีแผนหลัก</div>
+    {% endif %}
+    
+    <h2>สำนัก</h2>
+    {% if sectors %}
+    <table class="ss_table">
+        <tr>
+            <th></th>
+            <th class="sector_number">เลขสำนัก</th>
+            <th class="sector_name">ชื่อสำนัก</th>
+        </tr>
+        {% for sector in sectors %}
+        <tr>
+            <td class="controls">
+                <a href="{% url view_administration_organization_edit_sector sector.id %}" title="แก้ไขสำนัก"><img src="{{MEDIA_URL}}/images/icon_edit.png" class="icon" /></a>
+                {% if sector.has_child %}
+                <img src="{{MEDIA_URL}}/images/icon_delete_disabled.gif" class="icon" title="ไม่สามารถลบสำนักที่มีแผนหลักได้"/>
+                {% else %}
+                <a href="{% url view_administration_organization_delete_sector sector.id %}" title="ลบสำนัก" class="delete-sector"><img src="{{MEDIA_URL}}/images/icon_delete.png" class="icon" /></a>
+                {% endif %}
+            </td>
+            <td class="sector_number">{{sector.ref_no}}</td>
+            <td class="sector_name"><a href="#">{{sector.name}}</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <div class="ss_no_information">ไม่มีสำนัก</div>
+    {% endif %}
+</div>
+{% endblock %}

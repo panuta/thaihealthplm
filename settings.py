@@ -5,17 +5,18 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Your Name', 'your_email@domain.com'),
+    #('admin', 'application.testbed@gmail.com'),
+    ('panuta', 'panuta@gmail.com'),
 )
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'postgresql_psycopg2'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = 'plm_dev'             # Or path to database file if using sqlite3.
-DATABASE_USER = 'plm_dev'             # Not used with sqlite3.
-DATABASE_PASSWORD = 'plm_dev'         # Not used with sqlite3.
-DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
-DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
+DATABASE_ENGINE = 'postgresql_psycopg2'
+DATABASE_NAME = 'plm_dev'
+DATABASE_USER = 'plm_dev'
+DATABASE_PASSWORD = 'plm_dev'
+DATABASE_HOST = ''
+DATABASE_PORT = ''
 
 TIME_ZONE = 'Asia/Bangkok'
 LANGUAGE_CODE = 'th'
@@ -24,15 +25,13 @@ USE_I18N = True
 
 MEDIA_ROOT = os.path.join(_base, "media") + "/"
 MEDIA_URL = '/m'
-
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/media/'
 
 AUTH_PROFILE_MODULE = 'accounts.UserAccount'
 ACCOUNT_ACTIVATION_DAYS = 3
 LOGIN_REDIRECT_URL = "/dashboard/"
+
+WEBSITE_ADDRESS = 'localhost:8000'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
@@ -80,10 +79,26 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     
     'thaihealthplm.accounts',
+    'thaihealthplm.administration',
     'thaihealthplm.domain',
+    'thaihealthplm.helper',
     'thaihealthplm.budget',
     'thaihealthplm.progress',
     'thaihealthplm.kpi',
     
     'registration',
 )
+
+# ================================================================ #
+# ========================= PLM Settings ========================= #
+
+QUARTER_START_MONTH = 10 # (1 is for January)
+# IMPORTANT NOTE! Not support quarter which start and end of quarter is in different year
+
+QUARTER_LOWER_YEAR_NUMBER = False # Use lower year number to represent if QUARTER_START_MONTH is not 1
+QUARTER_INPUT_YEAR_SPAN = 5
+
+
+
+
+

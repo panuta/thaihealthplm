@@ -1,0 +1,13 @@
+
+
+.admin_org_page h2 {font-size:138.5%;margin-bottom:10px;color:#C60;}
+
+.admin_org_page table {margin-bottom:20px;}
+.admin_org_page table .sector_number {width:80px;text-align:center;}
+.admin_org_page table .manage {width:140px;text-align:center;}
+
+.admin_org_page table .ref_no {width:80px;text-align:center;}
+.admin_org_page table .sector {width:100px;text-align:center;}
+.admin_org_page table .year {width:150px;text-align:center;}
+
+.admin_org_page .master_plan_sectors {margin-top:15px;}
