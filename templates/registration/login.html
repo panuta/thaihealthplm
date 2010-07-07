@@ -11,5 +11,6 @@
 	</ul>
 	<div class="button_panel"><button type="submit">เข้าสู่ระบบ</button> <span>[<a href="/accounts/change_password/">เปลี่ยนรหัสผ่าน</a>] [<a href="/accounts/password/reset/">ลืมรหัสผ่าน?</a>]</span></div>
 	{% if next %}<input type="hidden" name="next" value="{{next}}" />{% else %}<input type="hidden" name="next" value="" />{% endif %}
+    {% csrf_token %}
 </form>
 {% endblock %}

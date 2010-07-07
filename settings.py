@@ -11,17 +11,24 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = 'postgresql_psycopg2'
-DATABASE_NAME = 'plm_dev'
-DATABASE_USER = 'plm_dev'
-DATABASE_PASSWORD = 'plm_dev'
-DATABASE_HOST = ''
-DATABASE_PORT = ''
+DATABASES = {
+    'default': {
+        'ENGINE': 'postgresql_psycopg2', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'plm_dev',                      # Or path to database file if using sqlite3.
+        'USER': 'plm_dev',                      # Not used with sqlite3.
+        'PASSWORD': 'plm_dev',                  # Not used with sqlite3.
+        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
+WEBSITE_ADDRESS = 'localhost:8000'
 
 TIME_ZONE = 'Asia/Bangkok'
 LANGUAGE_CODE = 'th'
 SITE_ID = 1
 USE_I18N = True
+USE_L10N = True
 
 MEDIA_ROOT = os.path.join(_base, "media") + "/"
 MEDIA_URL = '/m'
@@ -31,8 +38,6 @@ AUTH_PROFILE_MODULE = 'accounts.UserAccount'
 ACCOUNT_ACTIVATION_DAYS = 3
 LOGIN_REDIRECT_URL = "/dashboard/"
 
-WEBSITE_ADDRESS = 'localhost:8000'
-
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'application.testbed@gmail.com'
@@ -41,13 +46,13 @@ EMAIL_PORT = 587
 EMAIL_SUBJECT_PREFIX = '[SMS] '
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '$xxc1&yf9@#r%wm#4i+=w3es1v3$m(nrdx0v(bm=zim^a93l@t'
+SECRET_KEY = 'k)9jml4!z##emk!4o_1tt=iwv6tqrf48%y22zyb4bga4=k$g+s'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
-    'django.template.loaders.filesystem.load_template_source',
-    'django.template.loaders.app_directories.load_template_source',
-#     'django.template.loaders.eggs.load_template_source',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+#     'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
@@ -63,7 +68,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 )
 
 ROOT_URLCONF = 'thaihealthplm.urls'
@@ -77,6 +84,8 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.admin',
     
     'thaihealthplm.accounts',
     'thaihealthplm.administration',
@@ -89,6 +98,7 @@ INSTALLED_APPS = (
     'registration',
 )
 
+
 # ================================================================ #
 # ========================= PLM Settings ========================= #
 
@@ -97,8 +107,6 @@ QUARTER_START_MONTH = 10 # (1 is for January)
 
 QUARTER_LOWER_YEAR_NUMBER = False # Use lower year number to represent if QUARTER_START_MONTH is not 1
 QUARTER_INPUT_YEAR_SPAN = 5
-
-
 
 
 
