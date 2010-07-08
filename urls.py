@@ -12,7 +12,7 @@ from homepage.views import view_homepage
 urlpatterns = patterns('',
     (r'^', include('thaihealthplm.accounts.urls')),
     (r'^', include('thaihealthplm.administration.urls')),
-    #(r'^', include('thaihealthplm.domain.urls')),
+    (r'^', include('thaihealthplm.domain.urls')),
     #(r'^', include('thaihealthplm.budget.urls')),
     #(r'^', include('thaihealthplm.kpi.urls')),
     #(r'^', include('thaihealthplm.progress.urls')),

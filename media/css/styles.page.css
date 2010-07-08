@@ -11,3 +11,20 @@
 .admin_org_page table .year {width:150px;text-align:center;}
 
 .admin_org_page .master_plan_sectors {margin-top:15px;}
+
+
+
+/*
+ * ORGANIZATION PAGE
+ */
+
+.organization_page h3 {font-size:138.5%;margin:5px 0px 10px;color:#C60;}
+.organization_page ul {margin:0px 0px 25px;border-bottom:1px dashed #999;padding-bottom:10px;}
+.organization_page ul li {list-style:disc;margin:5px 0px 10px 25px;}
+.organization_page li a {font-size:108%;}
+
+/*
+ * SECTOR
+ */
+
+.sector_overview_page {}

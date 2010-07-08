@@ -29,13 +29,13 @@ SITE_ID = 1
 USE_I18N = True
 USE_L10N = True
 
-MEDIA_ROOT = os.path.join(_base, "media") + "/"
+MEDIA_ROOT = os.path.join(_base, 'media') + '/'
 MEDIA_URL = '/m'
 ADMIN_MEDIA_PREFIX = '/media/'
 
 AUTH_PROFILE_MODULE = 'accounts.UserAccount'
 ACCOUNT_ACTIVATION_DAYS = 3
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = '/'
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
@@ -55,12 +55,13 @@ TEMPLATE_LOADERS = (
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-    "django.core.context_processors.auth",
-    "django.core.context_processors.debug",
-    "django.core.context_processors.i18n",
-    "django.core.context_processors.media",
-    "django.core.context_processors.request",
-    #"thaihealthsms.context_processors.user_account",
+    'django.core.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages',
+    #'thaihealthsms.context_processors.user_account',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -75,7 +76,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'thaihealthplm.urls'
 
 TEMPLATE_DIRS = (
-    os.path.join(_base, "templates"),
+    os.path.join(_base, 'templates'),
 )
 
 INSTALLED_APPS = (

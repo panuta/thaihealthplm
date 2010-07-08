@@ -1,3 +1,4 @@
+{% load helper_tags %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -25,7 +26,11 @@
 	</div>
 	<div class="right_panel">
 		<div class="account"><span class="username">Panu Tangchalermkul</span> <a href="#">ตั้งค่าผู้ใช้</a> | <a href="#">ออกจากระบบ</a> |</div>
-		<div class="navigation"><a href="#"><img src="{{MEDIA_URL}}/images/base/nav_front.png" /> หน้าแรก</a> <a href="#">แผนงาน 1102-110</a></div>
+		<div class="navigation">
+			<a href="#"><img src="{{MEDIA_URL}}/images/base/nav_front.png" /> หน้าแรก</a>
+			<a href="#">แผนงาน 1102-110</a>
+			<a href="{% url view_organization %}">ผังองค์กร</a>
+		</div>
 	</div>
 </div>
 
@@ -35,6 +40,8 @@
 </div>
 
 {% block body_tabs %}{% endblock %}
+
+{% display_messages messages %}
 	
 <div id="body-content">
     {% block body_content %}{% endblock %}

@@ -32,3 +32,22 @@ def abbr_month_year(datetime):
 def week_elapse(value):
     return utilities.week_elapse_text(value)
 
+# FORM #################################################################
+
+@register.simple_tag
+def display_required():
+    return '<span class="required">* ต้องกรอก</span>'
+
+# MESSAGES #################################################################
+
+@register.simple_tag
+def display_messages(messages):
+    if messages:
+        html = ''
+        for message in messages:
+            html = html + '<li class="%s">%s</li>' % (message.tags, message)
+        
+        return '<ul class="ss_messages">%s</ul>' % html
+    else:
+        return ''
+

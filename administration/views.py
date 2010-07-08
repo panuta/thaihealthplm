@@ -3,6 +3,7 @@
 from datetime import date
 
 from django.conf import settings
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
@@ -28,10 +29,12 @@ def view_administration_organization(request):
     
     sectors = Sector.objects.all().order_by('ref_no')
     for sector in sectors:
-        sector.has_child = SectorMasterPlan.objects.filter(sector=sector).count() > 0
-
+        sector.removable = SectorMasterPlan.objects.filter(sector=sector).count() == 0
+    
     master_plans = MasterPlan.objects.all().order_by('ref_no')
     for master_plan in master_plans:
+        master_plan.removable = Plan.objects.filter(master_plan=master_plan).count() == 0
+        
         managing_sectors = SectorMasterPlan.objects.filter(master_plan=master_plan)
         
         master_plan.sectors = []
@@ -49,12 +52,12 @@ def view_administration_organization_add_sector(request):
         if form.is_valid():
             Sector.objects.create(ref_no=form.cleaned_data['ref_no'], name=form.cleaned_data['name'])
             
-            set_message(request, u'เพิ่มสำนักเรียบร้อย')
+            messages.success(request, 'เพิ่มสำนักเรียบร้อย')
             return redirect('view_administration_organization')
     else:
         form = ModifySectorForm()
 
-    return render_response(request, 'page_administration/administration_organization_sector_modify.html', {'form':form})
+    return render_page_response(request, 'organization', 'page_administration/manage_organization_modify_sector.html', {'form':form})
 
 @login_required
 def view_administration_organization_edit_sector(request, sector_id):
@@ -68,26 +71,26 @@ def view_administration_organization_edit_sector(request, sector_id):
             sector.ref_no = form.cleaned_data['ref_no']
             sector.name = form.cleaned_data['name']
             sector.save()
-
-            set_message(request, u'แก้ไขสำนักเรียบร้อย')
+            
+            messages.success(request, 'แก้ไขสำนักเรียบร้อย')
             return redirect('view_administration_organization')
 
     else:
         form = ModifySectorForm(initial={'sector_id':sector.id, 'ref_no':sector.ref_no, 'name':sector.name})
 
-    return render_response(request, 'page_administration/administration_organization_sector_modify.html', {'sector':sector, 'form':form})
+    return render_page_response(request, 'organization', 'page_administration/manage_organization_modify_sector.html', {'sector':sector, 'form':form})
 
 @login_required
 def view_administration_organization_delete_sector(request, sector_id):
     if not request.user.is_superuser: return access_denied(request)
 
     sector = get_object_or_404(Sector, pk=sector_id)
-
-    if not MasterPlan.objects.filter(sector=sector).count():
+    
+    if not SectorMasterPlan.objects.filter(sector=sector).count():
         sector.delete()
-        set_message(request, u'ลบสำนักเรียบร้อย')
+        messages.success(request, 'ลบสำนักเรียบร้อย')
     else:
-        set_message(request, u'ไม่สามารถลบสำนัก%s ได้เนื่องจากยังมีข้อมูลแผนหลักอยู่ภายใต้' % sector.name)
+        messages.error(request, 'ไม่สามารถลบสำนักได้เนื่องจากยังมีข้อมูลแผนหลักอยู่ภายใต้')
 
     return redirect('view_administration_organization')
 
@@ -102,19 +105,18 @@ def view_administration_organization_add_masterplan(request):
             name = form.cleaned_data['name']
             sectors = form.cleaned_data['sectors']
             
-            month_span = MonthSpan.objects.get(is_default=True)
-            master_plan = MasterPlan.objects.create(ref_no=ref_no, name=name, month_span=month_span)
+            master_plan = MasterPlan.objects.create(ref_no=ref_no, name=name)
             
             for sector in sectors: SectorMasterPlan.objects.create(sector=sector, master_plan=master_plan)
             
-            set_message(request, u'เพิ่มแผนหลักเรียบร้อย')
+            messages.success(request, 'เพิ่มแผนหลักเรียบร้อย')
             return redirect('view_administration_organization')
 
     else:
         form = ModifyMasterPlanForm()
     
     has_sectors = Sector.objects.all().count() > 0
-    return render_response(request, 'page_administration/administration_organization_masterplan_modify.html', {'form':form, 'has_sectors':has_sectors})
+    return render_page_response(request, 'organization', 'page_administration/manage_organization_modify_master_plan.html', {'form':form, 'has_sectors':has_sectors})
 
 @login_required
 def view_administration_organization_edit_masterplan(request, master_plan_id):
@@ -136,14 +138,14 @@ def view_administration_organization_edit_masterplan(request, master_plan_id):
             SectorMasterPlan.objects.filter(master_plan=master_plan).delete()
             for sector in sectors: SectorMasterPlan.objects.create(sector=sector, master_plan=master_plan)
             
-            set_message(request, u'แก้ไขแผนหลักเรียบร้อย')
+            messages.success(request, 'แก้ไขแผนหลักเรียบร้อย')
             return redirect('view_administration_organization')
 
     else:
         form = ModifyMasterPlanForm(initial={'sectors':[sector.sector.id for sector in SectorMasterPlan.objects.filter(master_plan=master_plan)], 'master_plan_id':master_plan.id, 'ref_no':master_plan.ref_no, 'name':master_plan.name})
     
     has_sectors = Sector.objects.all().count() > 0
-    return render_response(request, 'page_administration/administration_organization_masterplan_modify.html', {'master_plan':master_plan, 'form':form, 'has_sectors':has_sectors})
+    return render_page_response(request, 'organization', 'page_administration/manage_organization_modify_master_plan.html', {'master_plan':master_plan, 'form':form, 'has_sectors':has_sectors})
 
 @login_required
 def view_administration_organization_delete_masterplan(request, master_plan_id):
@@ -151,13 +153,13 @@ def view_administration_organization_delete_masterplan(request, master_plan_id):
 
     master_plan = get_object_or_404(MasterPlan, pk=master_plan_id)
 
-    if not Plan.objects.filter(master_plan=master_plan).count() and not Project.objects.filter(master_plan=master_plan).count():
+    if not Plan.objects.filter(master_plan=master_plan).count():
         master_plan.delete()
         SectorMasterPlan.objects.filter(master_plan=master_plan).delete()
         
-        set_message(request, u'ลบแผนหลักเรียบร้อย')
+        messages.success(request, 'ลบแผนหลักเรียบร้อย')
     else:
-        set_message(request, u'ไม่สามารถลบแผนหลัก%s ได้เนื่องจากยังมีข้อมูลกลุ่มแผนงานหรือแผนงานอยู่ภายใต้' % master_plan.name)
+        messages.error(request, 'ไม่สามารถลบแผนหลักได้เนื่องจากยังมีข้อมูลกลุ่มแผนงานหรือแผนงานอยู่ภายใต้')
 
     return redirect('view_administration_organization')
 
@@ -165,10 +167,9 @@ def view_administration_organization_delete_masterplan(request, master_plan_id):
 @login_required
 def view_administration_users(request):
     if not request.user.is_superuser: return access_denied(request)
+    user_accounts = UserAccount.objects.filter(user__is_superuser=False).order_by('firstname')
     
-    users = UserAccount.objects.filter(user__is_superuser=False).order_by('sector__ref_no')
-    
-    for user_account in users:
+    for user_account in user_accounts:
         responsibilities = UserRoleResponsibility.objects.filter(user=user_account)
         
         if responsibilities:
@@ -180,7 +181,7 @@ def view_administration_users(request):
         else:
             user_account.role_name = ''
     
-    return render_response(request, 'page_administration/administration_users.html', {'users': users})
+    return render_response(request, 'page_administration/manage_users.html', {'users': user_accounts})
 
 @login_required
 def view_administration_users_add(request):
@@ -236,9 +237,9 @@ def view_administration_users_add(request):
         master_plans = MasterPlan.objects.all()
         projects = Project.objects.filter(master_plan=project.master_plan, parent_project=None)
 
-        return render_response(request, 'page_administration/administration_users_modify.html', {'form': form, 'master_plans':master_plans, 'projects':projects, 'responsible':project})
+        return render_response(request, 'page_administration/manage_users_modify.html', {'form': form, 'master_plans':master_plans, 'projects':projects, 'responsible':project})
     else:
-        return render_response(request, 'page_administration/administration_users_modify.html', {'form': form, 'responsible':''})
+        return render_response(request, 'page_administration/manage_users_modify.html', {'form': form, 'responsible':''})
 
 @login_required
 def view_administration_users_edit(request, user_id):
@@ -322,7 +323,7 @@ def view_administration_users_edit(request, user_id):
             master_plans = None
             projects = None
 
-    return render_response(request, 'page_administration/administration_users_modify.html', {'editing_user':user, 'form': form, 'master_plans':master_plans, 'projects':projects, 'responsible':project})
+    return render_response(request, 'page_administration/manage_users_modify.html', {'editing_user':user, 'form': form, 'master_plans':master_plans, 'projects':projects, 'responsible':project})
 
 @login_required
 def view_administration_users_password(request, user_id):
@@ -331,7 +332,7 @@ def view_administration_users_password(request, user_id):
     user = User.objects.get(pk=user_id)
     new_user_account = UserAccount.objects.get(user=user)
 
-    return render_response(request, 'page_administrationistration/administration_users_password.html', {'new_user_account': new_user_account})
+    return render_response(request, 'page_administrationistration/manage_users_password.html', {'new_user_account': new_user_account})
 
 @login_required
 def view_administration_users_change_password(request, user_id):
@@ -350,6 +351,6 @@ def view_administration_users_change_password(request, user_id):
     else:
         form = UserChangePasswordForm()
     
-    return render_response(request, 'page_administration/administration_users_change_password.html', {'editing_user': user, 'form':form})
+    return render_response(request, 'page_administration/manage_users_change_password.html', {'editing_user': user, 'form':form})
 
 
