@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
 from django.contrib.sites.models import Site
 from django.core.mail import send_mail
+from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.shortcuts import get_object_or_404, redirect
 from django.template.loader import render_to_string
 
@@ -22,6 +23,10 @@ from helper.shortcuts import render_response, render_page_response, access_denie
 @login_required
 def view_administration(request):
     return redirect('/administration/organization/')
+
+#
+# ORGANIZATION #######################################################################
+#
 
 @login_required
 def view_administration_organization(request):
@@ -163,61 +168,68 @@ def view_administration_organization_delete_masterplan(request, master_plan_id):
 
     return redirect('view_administration_organization')
 
+#
+# USERS #######################################################################
+#
 
 @login_required
 def view_administration_users(request):
     if not request.user.is_superuser: return access_denied(request)
-    user_accounts = UserAccount.objects.filter(user__is_superuser=False).order_by('firstname')
+    user_accounts = UserAccount.objects.filter(user__is_superuser=False).extra(select={'lfirstname':'lower(firstname)', 'llastname':'lower(lastname)'}).order_by('lfirstname', 'llastname')
     
-    for user_account in user_accounts:
-        responsibilities = UserRoleResponsibility.objects.filter(user=user_account)
-        
-        if responsibilities:
-            responsibility = responsibilities[0]
-            user_account.role_name = GroupName.objects.get(group=responsibility.role).name
-            
-            if responsibility.role.name == 'project_manager' or responsibility.role.name == 'project_manager_assistant':
-                user_account.projects = responsibility.projects.all()
-        else:
-            user_account.role_name = ''
+    paginator = Paginator(user_accounts, settings.ADMIN_MANAGE_USERS_PER_PAGE)
     
-    return render_response(request, 'page_administration/manage_users.html', {'users': user_accounts})
+    try:
+        page = int(request.GET.get('p', '1'))
+    except ValueError:
+        page = 1
+    
+    try:
+        user_accounts = paginator.page(page)
+    except (EmptyPage, InvalidPage):
+        user_accounts = paginator.page(paginator.num_pages)
+    
+    return render_page_response(request, 'users', 'page_administration/manage_users.html', {'user_accounts': user_accounts})
 
 @login_required
 def view_administration_users_add(request):
     if not request.user.is_superuser: return access_denied(request)
-
+    
     if request.method == 'POST':
         form = UserAccountForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
+            firstname = form.cleaned_data['firstname']
+            lastname = form.cleaned_data['lastname']
             role = form.cleaned_data['role']
-            sector = form.cleaned_data['sector']
-            responsible = form.cleaned_data['responsible']
-
+            
             password = utilities.make_random_user_password()
-
+            
             user = User.objects.create_user(username, email, password=password)
             user_account = UserAccount.objects.get(user=user)
-            user_account.first_name = first_name
-            user_account.last_name = last_name
+            user_account.firstname = firstname
+            user_account.lastname = lastname
             user_account.random_password = password
-            user_account.sector = sector
             user_account.save()
             
             group = Group.objects.get(name=role)
+            group_details = GroupDetails.objects.get(group=group)
             
             user.groups.add(group)
             responsibility = UserRoleResponsibility.objects.create(user=user_account, role=group)
-
-            if role == 'project_manager' or role == 'project_manager_assistant':
-                project = Project.objects.get(pk=responsible)
-                responsibility.projects.add(project)
-            else:
+            
+            if group_details.level == GroupDetails.SECTOR_LEVEL:
+                sector_id = request.POST.get('responsible_sector')
+                sector = Sector.objects.get(pk=sector_id)
                 responsibility.sectors.add(sector)
+                
+            elif group_details.level == GroupDetails.PROGRAM_LEVEL:
+                program_ids = request.POST.getlist('responsible_program')
+                
+                for program_id in program_ids:
+                    program = Program.objects.get(pk=program_id)
+                    responsibility.programs.add(program)
             
             email_render_dict = {'username':username, 'password':password, 'settings':settings, 'site':Site.objects.get_current()}
             email_subject = render_to_string('email/create_user_subject.txt', email_render_dict)
@@ -226,113 +238,113 @@ def view_administration_users_add(request):
             send_mail(email_subject, email_message, settings.SYSTEM_NOREPLY_EMAIL, [email])
             
             return redirect('view_administration_users_password', user.id)
-
+            
     else:
         form = UserAccountForm()
-
-    if request.POST.get('responsible'):
-        responsible = request.POST['responsible']
-        project = Project.objects.get(pk=responsible)
-
-        master_plans = MasterPlan.objects.all()
-        projects = Project.objects.filter(master_plan=project.master_plan, parent_project=None)
-
-        return render_response(request, 'page_administration/manage_users_modify.html', {'form': form, 'master_plans':master_plans, 'projects':projects, 'responsible':project})
-    else:
-        return render_response(request, 'page_administration/manage_users_modify.html', {'form': form, 'responsible':''})
+    
+    sectors = Sector.objects.all().order_by('ref_no')
+    master_plans = MasterPlan.objects.all().order_by('ref_no')
+    
+    responsible_sector = ''
+    if 'responsible_sector' in request.POST:
+        sector_id = request.POST.get('responsible_sector')
+        responsible_sector = Sector.objects.get(pk=sector_id)
+    
+    responsible_programs = []
+    if 'responsible_program' in request.POST:
+        program_ids = request.POST.getlist('responsible_program')
+        responsible_programs = [Program.objects.get(pk=program_id) for program_id in program_ids]
+    
+    return render_page_response(request, 'users', 'page_administration/manage_users_modify_user.html', {'form': form, 'sectors':sectors, 'master_plans':master_plans, 'responsible_sector':responsible_sector, 'responsible_programs':responsible_programs})
 
 @login_required
 def view_administration_users_edit(request, user_id):
     if not request.user.is_superuser: return access_denied(request)
+    user = get_object_or_404(User, pk=user_id)
     
-    user = User.objects.get(pk=user_id)
-
     if request.method == 'POST':
         form = UserAccountForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
+            firstname = form.cleaned_data['firstname']
+            lastname = form.cleaned_data['lastname']
             role = form.cleaned_data['role']
-            sector = form.cleaned_data['sector']
-            responsible = form.cleaned_data['responsible']
-
+            
             user.username = username
             user.email = email
             user.save()
-
+            
             user_account = UserAccount.objects.get(user=user)
-            user_account.first_name = first_name
-            user_account.last_name = last_name
-            user_account.sector = sector
+            user_account.firstname = firstname
+            user_account.lastname = lastname
             user_account.save()
             
             group = Group.objects.get(name=role)
+            group_details = GroupDetails.objects.get(group=group)
+            
             user.groups.clear()
             user.groups.add(group)
             
             UserRoleResponsibility.objects.filter(user=user_account).delete()
             responsibility = UserRoleResponsibility.objects.create(user=user_account, role=group)
             
-            if role == 'project_manager' or role == 'project_manager_assistant':
-                project = Project.objects.get(pk=responsible)
-                responsibility.projects.clear()
-                responsibility.projects.add(project)
-            else:
-                responsibility.sectors.clear()
+            if group_details.level == GroupDetails.SECTOR_LEVEL:
+                sector_id = request.POST.get('responsible_sector')
+                sector = Sector.objects.get(pk=sector_id)
                 responsibility.sectors.add(sector)
+                
+            elif group_details.level == GroupDetails.PROGRAM_LEVEL:
+                program_ids = request.POST.getlist('responsible_program')
+                
+                for program_id in program_ids:
+                    program = Program.objects.get(pk=program_id)
+                    responsibility.programs.add(program)
             
-            set_message(request, u'แก้ไขข้อมูลผู้ใช้เรียบร้อย')
+            messages.success(request, 'แก้ไขข้อมูลผู้ใช้เรียบร้อย')
             return redirect('view_administration_users')
-
-        else:
-            if request.POST.get('responsible'):
-                responsible = request.POST['responsible']
-                project = Project.objects.get(pk=responsible)
-
-                master_plans = MasterPlan.objects.all()
-                projects = Project.objects.filter(master_plan=project.master_plan, parent_project=None)
-            else:
-                project = None
-                master_plans = None
-                projects = None
-
+        
+        responsible_sector = ''
+        if 'responsible_sector' in request.POST:
+            sector_id = request.POST.get('responsible_sector')
+            responsible_sector = Sector.objects.get(pk=sector_id)
+        
+        responsible_programs = []
+        if 'responsible_program' in request.POST:
+            program_ids = request.POST.getlist('responsible_program')
+            responsible_programs = [Program.objects.get(pk=program_id) for program_id in program_ids]
+        
     else:
-        role = user.groups.all()[0].name
-        if role == 'project_manager' or role == 'project_manager_assistant':
-            responsible = UserRoleResponsibility.objects.filter(user=user.get_profile())[0].projects.all()[0].id
-        else:
-            responsible = None
-
         form = UserAccountForm(initial={
             'username':user.username,
             'email':user.email,
-            'first_name':user.get_profile().first_name,
-            'last_name':user.get_profile().last_name,
-            'role':role,
-            'sector':user.get_profile().sector.id,
-            'responsible':responsible});
-
-        if responsible:
-            project = Project.objects.get(pk=responsible)
-            master_plans = MasterPlan.objects.all()
-            projects = Project.objects.filter(master_plan=project.master_plan, parent_project=None)
-        else:
-            project = None
-            master_plans = None
-            projects = None
-
-    return render_response(request, 'page_administration/manage_users_modify.html', {'editing_user':user, 'form': form, 'master_plans':master_plans, 'projects':projects, 'responsible':project})
+            'firstname':user.get_profile().firstname,
+            'lastname':user.get_profile().lastname,
+            'role':user.groups.all()[0].name,
+        });
+        
+        group_details = GroupDetails.objects.get(group=user.groups.all()[0])
+        responsibility = UserRoleResponsibility.objects.filter(user=user.get_profile())[0]
+        
+        responsible_sector = ''
+        responsible_programs = []
+        
+        if group_details.level == GroupDetails.SECTOR_LEVEL:
+            responsible_sector = responsibility.sectors.all()[0]
+        elif group_details.level == GroupDetails.PROGRAM_LEVEL:
+            responsible_programs = responsibility.programs.all()
+        
+    sectors = Sector.objects.all().order_by('ref_no')
+    master_plans = MasterPlan.objects.all().order_by('ref_no')
+    
+    return render_page_response(request, 'users', 'page_administration/manage_users_modify_user.html', {'form': form, 'editing_user':user, 'sectors':sectors, 'master_plans':master_plans, 'responsible_sector':responsible_sector, 'responsible_programs':responsible_programs})
 
 @login_required
 def view_administration_users_password(request, user_id):
     if not request.user.is_superuser: return access_denied(request)
-
     user = User.objects.get(pk=user_id)
     new_user_account = UserAccount.objects.get(user=user)
-
-    return render_response(request, 'page_administrationistration/manage_users_password.html', {'new_user_account': new_user_account})
+    return render_page_response(request, 'users', 'page_administration/manage_users_password.html', {'new_user_account': new_user_account})
 
 @login_required
 def view_administration_users_change_password(request, user_id):
@@ -342,7 +354,6 @@ def view_administration_users_change_password(request, user_id):
     if request.method == 'POST':
         form = UserChangePasswordForm(request.POST)
         if form.is_valid():
-            print form.cleaned_data['password1']
             user.set_password(form.cleaned_data['password1'])
             user.save()
             set_message(request, u'ตั้งรหัสผ่านใหม่เรียบร้อย')
@@ -351,6 +362,6 @@ def view_administration_users_change_password(request, user_id):
     else:
         form = UserChangePasswordForm()
     
-    return render_response(request, 'page_administration/manage_users_change_password.html', {'editing_user': user, 'form':form})
+    return render_page_response(request, 'users', 'page_administration/manage_users_change_password.html', {'editing_user': user, 'form':form})
 
 

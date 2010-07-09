@@ -12,11 +12,15 @@ class UserRoleResponsibility(models.Model):
     role = models.ForeignKey(Group)
     sectors = models.ManyToManyField('domain.Sector', null=True)
     programs = models.ManyToManyField('domain.Program', null=True)
-    projects = models.ManyToManyField('domain.Project', null=True)
 
-class GroupName(models.Model):
+class GroupDetails(models.Model):
+    NO_LEVEL = 0
+    SECTOR_LEVEL = 1
+    PROGRAM_LEVEL = 2
+    
     group = models.ForeignKey(Group, unique=True)
     name = models.CharField(max_length=512)
+    level = models.IntegerField(default=SECTOR_LEVEL) # Use to determine role responsibility either sectors or programs
 
 class AdminPermission(models.Model):
     permission = models.CharField(max_length=300)

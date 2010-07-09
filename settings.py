@@ -21,6 +21,7 @@ DATABASES = {
     }
 }
 
+SYSTEM_NAME = 'Thai Health Plan Management'
 WEBSITE_ADDRESS = 'localhost:8000'
 
 TIME_ZONE = 'Asia/Bangkok'
@@ -44,6 +45,8 @@ EMAIL_HOST_PASSWORD = 'opendream'
 EMAIL_PORT = 587
 EMAIL_SUBJECT_PREFIX = '[SMS] '
 
+SYSTEM_NOREPLY_EMAIL = EMAIL_HOST_USER
+
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'k)9jml4!z##emk!4o_1tt=iwv6tqrf48%y22zyb4bga4=k$g+s'
 
@@ -65,6 +68,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'thaihealthplm.middleware.AJAXSimpleExceptionResponse',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -108,5 +112,6 @@ QUARTER_START_MONTH = 10 # (1 is for January)
 QUARTER_LOWER_YEAR_NUMBER = False # Use lower year number to represent if QUARTER_START_MONTH is not 1
 QUARTER_INPUT_YEAR_SPAN = 5
 
-
+# PAGINATION
+ADMIN_MANAGE_USERS_PER_PAGE = 25
 

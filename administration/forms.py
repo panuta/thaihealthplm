@@ -6,19 +6,17 @@ from django.forms.util import ErrorList
 
 from domain.forms import SectorChoiceField, SectorCheckboxChoiceField
 
-from accounts.models import GroupName
+from accounts.models import GroupDetails
 from domain.models import Sector, MasterPlan, SectorMasterPlan
 
-roles = [(group_name.group.name, group_name.name) for group_name in GroupName.objects.all()]
+roles = [(group_details.group.name, group_details.name) for group_details in GroupDetails.objects.all()]
 
 class UserAccountForm(forms.Form):
     username = forms.CharField(max_length=500, label='ชื่อผู้ใช้')
     email = forms.EmailField(label='อีเมล')
-    first_name = forms.CharField(max_length=500, label='ชื่อจริง')
-    last_name = forms.CharField(max_length=500, label='นามสกุล')
+    firstname = forms.CharField(max_length=500, label='ชื่อจริง')
+    lastname = forms.CharField(max_length=500, label='นามสกุล')
     role = forms.CharField(widget=forms.Select(choices=roles), label='ตำแหน่ง')
-    sector = SectorChoiceField(label='สังกัดสำนัก')
-    responsible = forms.IntegerField(widget=forms.HiddenInput(), required=False, label='เลือกแผนหลัก จากนั้นเลือกแผนงานที่รับผิดชอบ')
 
 class UserChangePasswordForm(forms.Form):
     password1 = forms.CharField(max_length=100, widget=forms.PasswordInput(), label='รหัสผ่าน')

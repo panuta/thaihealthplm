@@ -35,10 +35,12 @@ a:hover {color:#FFF;background-color:#960;}
 
 #body-content {padding:15px;}
 
+/* Breadcrumbs */
 .ss_breadcrumbs .breadcrumbs {margin-bottom:8px;}
 .ss_breadcrumbs h2 {font-size:146.5%;margin-bottom:20px;padding-bottom:5px;border-bottom:5px solid #CCC;}
 .ss_breadcrumbs .subtitle {margin:10px 0px 5px;color:#444;}
 
+/* Messages */
 .ss_messages {margin:15px 0px 0px;}
 .ss_messages li {border:1px dashed #999;margin:0px 15px 10px;padding:10px 10px 7px;font-size:108%;}
 .ss_messages li.debug {color:#333;}
@@ -47,6 +49,7 @@ a:hover {color:#FFF;background-color:#960;}
 .ss_messages li.warning {padding-left:32px;background:url(../images/icons/warning.png) 10px center #FFC no-repeat;}
 .ss_messages li.error {padding-left:32px;background:url(../images/icons/error.png) 10px center #FAA no-repeat;}
 
+/* Control Panel */
 .ss_control_panel {margin:5px 0px 15px;}
 .ss_control_panel ul {border-bottom:2px solid #999;background-color:#68AAB1;}
 .ss_control_panel ul li {font-size:108%;color:#FFF;padding:8px 15px;display:inline-block;display:-moz-inline-stack;*display:inline;list-style:none;zoom:1;}
@@ -54,6 +57,13 @@ a:hover {color:#FFF;background-color:#960;}
 .ss_control_panel ul li a {color:#FFF !important;}
 .ss_control_panel ul li a:hover {}
 
+/* Pagination */
+.ss_pagination {margin-bottom:15px;text-align:right;}
+.ss_pagination span {margin:0px 5px;color:#333;}
+.ss_pagination span.number {padding:3px 10px;font-weight:bold;font-size:116%;}
+.ss_pagination span.disabled {color:#888;}
+
+/* Table */
 .ss_table {width:100%;}
 .ss_table th {border:1px solid #999;padding:10px 10px;background-color:#777;color:#EEE;font-size:116%;}
 .ss_table td {border:1px solid #999;padding:8px 10px;font-size:108%;}
@@ -62,12 +72,15 @@ a:hover {color:#FFF;background-color:#960;}
 .ss_table .controls img {margin:0px 4px;}
 .ss_table .controls a:hover {background:none !important;}
 
+/* Form */
 .ss_form ul {margin-left:30px;}
 .ss_form li {margin-bottom:20px;}
 
 .ss_form li label.caption {display:block;margin-bottom:5px;font-size:108%;color:#396;}
 .ss_form li .required {font-size:13px;color:#886;margin-left:7px;}
 .ss_form li .comment {margin-top:4px;color:#555;}
+
+.ss_form li .errorlist {margin:5px 0px 0px 0px;color:#C30;}
 
 .ss_form .SHORT input {width:100px;}
 .ss_form .MEDIUM input {width:250px;}

@@ -29,7 +29,6 @@ class Program(models.Model):
     end_date = models.DateField(null=True)
     status = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
-    created_by = models.ForeignKey('accounts.UserAccount')
 
 class Project(models.Model):
     """

@@ -19,3 +19,8 @@ urlpatterns = patterns('administration.views',
 	url(r'^administration/user/(?P<user_id>\d+)/password/$', 'view_administration_users_password', name='view_administration_users_password'),
 	url(r'^administration/user/(?P<user_id>\d+)/change_password/$', 'view_administration_users_change_password', name='view_administration_users_change_password'),
 )
+
+urlpatterns += patterns('administration.ajax',
+	url(r'^ajax/admin/get_group_level/$', 'ajax_get_group_level', name='ajax_get_group_level'),
+	url(r'^ajax/admin/get_master_plan_programs/$', 'ajax_get_master_plan_programs', name='ajax_get_master_plan_programs'),
+)

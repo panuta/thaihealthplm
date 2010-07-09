@@ -27,20 +27,23 @@ def after_syncdb(sender, **kwargs):
     Site.objects.all().update(domain=settings.WEBSITE_ADDRESS, name=settings.WEBSITE_ADDRESS)
     
     # User Roles ##################
+    director_role, created = Group.objects.get_or_create(name='director')
+    GroupDetails.objects.get_or_create(group=director_role, name='ผู้จัดการกองทุน', level=GroupDetails.NO_LEVEL)
+    
     sector_manager_role, created = Group.objects.get_or_create(name='sector_manager')
-    GroupName.objects.get_or_create(group=sector_manager_role, name='ผู้อำนวยการสำนัก')
+    GroupDetails.objects.get_or_create(group=sector_manager_role, name='ผู้อำนวยการสำนัก', level=GroupDetails.SECTOR_LEVEL)
     
     sector_manager_assistant_role, created = Group.objects.get_or_create(name='sector_manager_assistant')
-    GroupName.objects.get_or_create(group=sector_manager_assistant_role, name='ผู้ช่วยผู้อำนวยการสำนัก')
+    GroupDetails.objects.get_or_create(group=sector_manager_assistant_role, name='ผู้ช่วยผู้อำนวยการสำนัก', level=GroupDetails.SECTOR_LEVEL)
     
     sector_specialist_role, created = Group.objects.get_or_create(name='sector_specialist')
-    GroupName.objects.get_or_create(group=sector_specialist_role, name='นักวิชาการบริหารแผนงาน')
+    GroupDetails.objects.get_or_create(group=sector_specialist_role, name='นักวิชาการบริหารแผนงาน', level=GroupDetails.SECTOR_LEVEL)
     
-    project_manager_role, created = Group.objects.get_or_create(name='project_manager')
-    GroupName.objects.get_or_create(group=project_manager_role, name='ผู้จัดการแผนงาน')
+    program_manager_role, created = Group.objects.get_or_create(name='program_manager')
+    GroupDetails.objects.get_or_create(group=program_manager_role, name='ผู้จัดการแผนงาน', level=GroupDetails.PROGRAM_LEVEL)
     
-    project_manager_assistant_role, created = Group.objects.get_or_create(name='project_manager_assistant')
-    GroupName.objects.get_or_create(group=project_manager_assistant_role, name='ผู้ช่วยผู้จัดการแผนงาน')
+    program_manager_assistant_role, created = Group.objects.get_or_create(name='program_manager_assistant')
+    GroupDetails.objects.get_or_create(group=program_manager_assistant_role, name='ผู้ช่วยผู้จัดการแผนงาน', level=GroupDetails.PROGRAM_LEVEL)
     
     # Administrator ##################
     admins = settings.ADMINS
@@ -120,14 +123,65 @@ def after_syncdb(sender, **kwargs):
     BELOW CODE IS FOR PROTOTYPE-PURPOSE ONLY
     """
     
-    """
     plan1, created = Plan.objects.get_or_create(master_plan=master_plan1, ref_no="101", name="Sample Plan 1")
     plan2, created = Plan.objects.get_or_create(master_plan=master_plan1, ref_no="102", name="Sample Plan 2")
     
-    project101_01, created = Project.objects.get_or_create(master_plan=master_plan1, plan=plan1, prefix_name=Project.PROGRAM_PREFIX, ref_no="101-01", name="Sample Program 1")
-    project101_02, created = Project.objects.get_or_create(master_plan=master_plan1, plan=plan1, prefix_name=Project.PROGRAM_PREFIX, ref_no="101-02", name="Sample Program 2")
-    project102_01, created = Project.objects.get_or_create(master_plan=master_plan1, plan=plan2, prefix_name=Project.PROGRAM_PREFIX, ref_no="102-01", name="Sample Program 3")
-    project102_02, created = Project.objects.get_or_create(master_plan=master_plan1, plan=plan2, prefix_name=Project.PROGRAM_PREFIX, ref_no="102-02", name="Sample Program 4")
+    program101_01, created = Program.objects.get_or_create(plan=plan1, ref_no="101-01", name="Sample Program 1")
+    program101_02, created = Program.objects.get_or_create(plan=plan1, ref_no="101-02", name="Sample Program 2")
+    program102_01, created = Program.objects.get_or_create(plan=plan2, ref_no="102-01", name="Sample Program 3")
+    program102_02, created = Program.objects.get_or_create(plan=plan2, ref_no="102-02", name="Sample Program 4")
+    
+    
+    # Create sector assistant
+    try:
+        User.objects.get(username='assistant1')
+    except User.DoesNotExist:
+        user = User.objects.create_user('assistant1', 'panuta@gmail.com', 'password')
+        user.save()
+        
+        user_account = user.get_profile()
+        user_account.firstname = 'Sector'
+        user_account.lastname = 'Assistant'
+        user_account.save()
+        
+        user.groups.add(sector_manager_assistant_role)
+        responsibility = UserRoleResponsibility.objects.create(user=user_account, role=sector_manager_assistant_role)
+        responsibility.sectors.add(sector1)
+        responsibility.programs.add(program101_01)
+        responsibility.programs.add(program102_01)
+    
+    try:
+        User.objects.get(username='program1')
+    except User.DoesNotExist:
+        user = User.objects.create_user('program1', 'panuta@gmail.com', 'password')
+        user.save()
+        
+        user_account = user.get_profile()
+        user_account.firstname = 'Program1'
+        user_account.lastname = 'Manager'
+        user_account.save()
+        
+        user.groups.add(program_manager_role)
+        responsibility = UserRoleResponsibility.objects.create(user=user_account, role=program_manager_role)
+        responsibility.programs.add(program101_01)
+    
+    try:
+        User.objects.get(username='program2')
+    except User.DoesNotExist:
+        user = User.objects.create_user('program2', 'panuta@gmail.com', 'password')
+        user.save()
+        
+        user_account = user.get_profile()
+        user_account.firstname = 'Program2'
+        user_account.lastname = 'Manager'
+        user_account.save()
+        
+        user.groups.add(program_manager_role)
+        responsibility = UserRoleResponsibility.objects.create(user=user_account, role=program_manager_role)
+        responsibility.programs.add(program102_01)
+    
+    
+    """
     
     # Create sector assistant
     try:

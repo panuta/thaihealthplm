@@ -4,8 +4,7 @@
 {% block html_head %}
 {% endblock %}
 
-{% block body_subtitle %}การจัดการระบบ{% endblock %}
-{% block body_title %}โครงสร้างองค์กร{% endblock %}
+{% block body_title %}การจัดการระบบ{% endblock %}
 
 {% block body_tabs %}{% tabs_for_administration page %}{% endblock %}
 
@@ -15,7 +14,7 @@
     <h2>{% if master_plan %}แก้ไขแผนหลัก{% else %}เพิ่มแผนหลัก{% endif %}</h2>
 </div>
 
-<form action="." method="post" class="ss_form admin_org_page">
+<form action="." method="post" class="ss_form">
 	{% csrf_token %}
 	
     {% if has_sectors %}

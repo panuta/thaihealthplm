@@ -74,3 +74,41 @@ def view_change_password(request):
         form = ChangePasswordForm()
 
     return render_response(request, "registration/change_password.html", {'form':form,})
+
+def view_user_settings(request):
+    
+    #ChangeProfileForm
+    
+    if request.method == 'POST':
+        if 'profile_button' in request.POST and request.POST.get('profile_button'):
+            form_profile = ChangeUserProfileForm(request.POST)
+            if form.is_valid():
+                firstname = form.cleaned_data['firstname']
+                lastname =form.cleaned_data['lastname']
+                
+                user_account = request.user.get_profile()
+                user_account.firstname = firstname
+                user_account.lastname = lastname
+                user_account.save()
+                
+                return redirect('view_user_settings')
+        
+        if 'password_button' in request.POST and request.POST.get('password_button'):
+            form_password = ChangeUserPasswordForm(request.POST)
+            if form.is_valid():
+                password1 = form.cleaned_data['password1']
+                password2 =form.cleaned_data['password2']
+                
+                user = request.user
+                user.set_password(password1)
+                user.save()
+                
+                return redirect('view_user_settings')
+    
+    else:
+        form_profile = ChangeUserProfileForm(initial={'firstname':request.user.get_profile().firstname, 'lastname':request.user.get_profile().lastname})
+        form_password = ChangeUserPasswordForm()
+    
+    return render_response(request, "page_user/user_settings.html", {'form_profile':form_profile, 'form_password':form_password,})
+
+
