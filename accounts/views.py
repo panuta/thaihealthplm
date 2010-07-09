@@ -55,26 +55,6 @@ def view_first_time_login(request):
     next = request.GET.get('next', '')
     return render_response(request, "registration/first_time_login.html", {'form':form, 'next':next})
 
-def view_change_password(request):
-    if request.method == 'POST':
-        form = ChangePasswordForm(request.POST)
-        if form.is_valid():
-            username = form.cleaned_data['username']
-            old_password = form.cleaned_data['old_password']
-            new_password1 = form.cleaned_data['new_password1']
-            new_password2 =form.cleaned_data['new_password2']
-
-            user = User.objects.get(username=username)
-            user.set_password(new_password1)
-            user.save()
-
-            return redirect('/accounts/login/')
-
-    else:
-        form = ChangePasswordForm()
-
-    return render_response(request, "registration/change_password.html", {'form':form,})
-
 def view_user_settings(request):
     
     #ChangeProfileForm
@@ -82,9 +62,9 @@ def view_user_settings(request):
     if request.method == 'POST':
         if 'profile_button' in request.POST and request.POST.get('profile_button'):
             form_profile = ChangeUserProfileForm(request.POST)
-            if form.is_valid():
-                firstname = form.cleaned_data['firstname']
-                lastname =form.cleaned_data['lastname']
+            if form_profile.is_valid():
+                firstname = form_profile.cleaned_data['firstname']
+                lastname =form_profile.cleaned_data['lastname']
                 
                 user_account = request.user.get_profile()
                 user_account.firstname = firstname
@@ -95,9 +75,9 @@ def view_user_settings(request):
         
         if 'password_button' in request.POST and request.POST.get('password_button'):
             form_password = ChangeUserPasswordForm(request.POST)
-            if form.is_valid():
-                password1 = form.cleaned_data['password1']
-                password2 =form.cleaned_data['password2']
+            if form_password.is_valid():
+                password1 = form_password.cleaned_data['password1']
+                password2 =form_password.cleaned_data['password2']
                 
                 user = request.user
                 user.set_password(password1)
