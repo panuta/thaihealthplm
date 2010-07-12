@@ -4,8 +4,6 @@ register = template.Library()
 
 from django.core.urlresolvers import reverse
 
-from accounts.models import UserRoleResponsibility
-
 from helper import utilities
 
 # DATE TIME #################################################################
@@ -37,39 +35,6 @@ def abbr_month_year(datetime):
 @register.filter(name='week_elapse')
 def week_elapse(value):
     return utilities.week_elapse_text(value)
-
-# TEMPLATE #################################################################
-
-@register.simple_tag
-def display_header_navigation(user, MEDIA_URL):
-    html = ''
-    
-    if user.groups.all():
-        primary_role = user.groups.all()[0]
-        
-        if primary_role.name == 'director':
-            html = html + '<a href="%s"><img src="%s/images/base/nav_front.png" /> หน้าผู้จัดการกองทุน</a>' % (reverse('view_dashboard'), MEDIA_URL)
-        
-        elif primary_role.name == 'sector_manager':
-            responsibility = UserRoleResponsibility.objects.get(user=user.get_profile(), role=primary_role)
-            sector = responsibility.sectors.all()[0]
-            html = html + '<a href="%s"><img src="%s/images/base/nav_front.png" /> ภาพรวมสำนัก %d</a>' % (reverse('view_sector_overview', args=[sector.ref_no]), MEDIA_URL, sector.ref_no)
-        
-        elif primary_role.name == 'sector_manager_assistant':
-            html = html + '<a href="%s"><img src="%s/images/base/nav_front.png" /> หน้าแรก</a>' % (reverse('view_dashboard'), MEDIA_URL)
-        
-        elif primary_role.name == 'program_manager':
-            html = html + '<a href="%s"><img src="%s/images/base/nav_front.png" /> หน้าแรก</a>' % (reverse('view_dashboard'), MEDIA_URL)
-        
-        elif primary_role.name == 'program_manager_assistant':
-            html = html + '<a href="%s"><img src="%s/images/base/nav_front.png" /> หน้าแรก</a>' % (reverse('view_dashboard'), MEDIA_URL)
-        
-        html = html + '<a href="%s">ผังองค์กร</a>' % reverse('view_organization')
-    
-    if user.is_superuser:
-        html = html + '<a href="%s">จัดการระบบ</a>' % reverse('view_administration')
-    
-    return html
 
 # FORM #################################################################
 

@@ -36,12 +36,15 @@ def view_sector_overview(request, sector_ref_no):
     return render_page_response(request, 'overview', 'page_sector/sector_overview.html', {'sector':sector, 'master_plans':master_plans})
 
 def view_sector_progress(request, sector_ref_no):
+    sector = get_object_or_404(Sector, ref_no=sector_ref_no)
     return render_page_response(request, 'progress', 'page_sector/sector_progress.html', {'sector':sector, })
 
 def view_sector_kpi(request, sector_ref_no):
+    sector = get_object_or_404(Sector, ref_no=sector_ref_no)
     return render_page_response(request, 'kpi', 'page_sector/sector_kpi.html', {'sector':sector, })
 
 def view_sector_budget(request, sector_ref_no):
+    sector = get_object_or_404(Sector, ref_no=sector_ref_no)
     return render_page_response(request, 'budget', 'page_sector/sector_budget.html', {'sector':sector, })
 
 #
@@ -63,12 +66,15 @@ def view_master_plan_overview(request, master_plan_ref_no):
     return render_page_response(request, 'overview', 'page_sector/master_plan_overview.html', {'master_plan': master_plan})
 
 def view_master_plan_progress(request, master_plan_ref_no):
+    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
     return render_page_response(request, 'progress', 'page_sector/master_plan_progress.html', {'master_plan':master_plan, })
 
 def view_master_plan_kpi(request, master_plan_ref_no):
+    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
     return render_page_response(request, 'kpi', 'page_sector/master_plan_kpi.html', {'master_plan':master_plan, })
 
 def view_master_plan_budget(request, master_plan_ref_no):
+    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
     return render_page_response(request, 'budget', 'page_sector/master_plan_budget.html', {'master_plan':master_plan, })
 
 #

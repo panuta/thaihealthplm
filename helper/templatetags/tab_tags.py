@@ -20,7 +20,7 @@ def tabs_for_administration(page):
     return _generate_tabs(html)
 
 @register.simple_tag
-def tabs_for_sector(page, sector):
+def tabs_for_sector(page, user, sector):
     html = ''
     
     if page == 'overview': html = html + '<li class="selected">ภาพรวม</li>'
@@ -38,7 +38,7 @@ def tabs_for_sector(page, sector):
     return _generate_tabs(html)
 
 @register.simple_tag
-def tabs_for_master_plan(page, master_plan):
+def tabs_for_master_plan(page, user, master_plan):
     html = ''
     
     if page == 'overview': html = html + '<li class="selected">ภาพรวม</li>'

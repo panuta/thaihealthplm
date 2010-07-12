@@ -1,4 +1,4 @@
-{% load helper_tags %}
+{% load helper_tags page_tags %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
@@ -30,23 +30,15 @@
 			<a href="{% url view_user_settings %}">ตั้งค่าผู้ใช้</a> | <a href="/accounts/logout/">ออกจากระบบ</a> |
 		</div>
 		<div class="navigation">
-			{% display_header_navigation user MEDIA_URL %}
+			{% display_header_navigation user %}
 		</div>
 	</div>
 </div>
-
-<div id="body-title">
-	<div class="subtitle">{% block body_subtitle %}{% endblock %}</div>
-	<h1>{% block body_title %}{% endblock %}</h1>
-</div>
-
+<div id="body-title">{% block body_title %}{% endblock %}</div>
 {% block body_tabs %}{% endblock %}
-
 {% display_messages messages %}
-	
 <div id="body-content">
     {% block body_content %}{% endblock %}
 </div>	
-
 </body>
 </html>
