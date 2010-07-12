@@ -20,17 +20,17 @@
 <body class="yui-skin-sam">
 <div id="body-header">
 	<div class="logo">
-		<img src="{{MEDIA_URL}}/images/base/thaihealth_color_small.png" />
+		<a href="/"><img src="{{MEDIA_URL}}/images/base/thaihealth_color_small.png" /></a>
 		<div class="subname">สำนักงานกองทุนสนับสนุนการสร้างเสริมสุขภาพ (สสส.)</div>
 		<div class="name">ระบบตรวจสอบการดำเนินงาน</div>
 	</div>
 	<div class="right_panel">
-		<div class="account"><span class="username">Panu Tangchalermkul</span> {% if not user.is_superuser %}<a href="{% url view_user_settings %}">ตั้งค่าผู้ใช้</a>{% endif %} | <a href="/accounts/logout/">ออกจากระบบ</a> |</div>
+		<div class="account">
+			<span class="username">{{user.get_profile.firstname}} {{user.get_profile.lastname}} {% if user.is_superuser %}(ผู้ดูแลระบบ){% endif %}</span>
+			<a href="{% url view_user_settings %}">ตั้งค่าผู้ใช้</a> | <a href="/accounts/logout/">ออกจากระบบ</a> |
+		</div>
 		<div class="navigation">
-			<a href="/"><img src="{{MEDIA_URL}}/images/base/nav_front.png" /> หน้าแรก</a>
-			<a href="#">แผนงาน 1102-110</a>
-			<a href="{% url view_organization %}">ผังองค์กร</a>
-			{% if user.is_superuser %}<a href="{% url view_administration %}">จัดการระบบ</a>{% endif %}
+			{% display_header_navigation user MEDIA_URL %}
 		</div>
 	</div>
 </div>

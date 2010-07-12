@@ -69,8 +69,8 @@ def after_syncdb(sender, **kwargs):
             #send_mail(email_subject, email_message, settings.SYSTEM_NOREPLY_EMAIL, [admin[1]])
             
             admin_account = admin_user.get_profile()
-            admin_account.first_name = admin[0]
-            admin_account.last_name = ''
+            admin_account.firstname = admin[0]
+            admin_account.lastname = ''
             admin_account.save()
     
     # Sector ##################
@@ -131,16 +131,44 @@ def after_syncdb(sender, **kwargs):
     program102_01, created = Program.objects.get_or_create(plan=plan2, ref_no="102-01", name="Sample Program 3")
     program102_02, created = Program.objects.get_or_create(plan=plan2, ref_no="102-02", name="Sample Program 4")
     
-    
-    # Create sector assistant
+    # INITIAL USER LIST
     try:
-        User.objects.get(username='assistant1')
+        User.objects.get(username='director')
     except User.DoesNotExist:
-        user = User.objects.create_user('assistant1', 'panuta@gmail.com', 'password')
+        user = User.objects.create_user('director', 'panuta@gmail.com', 'password')
+        user.save()
+        
+        user_account = user.get_profile()
+        user_account.firstname = 'Managing'
+        user_account.lastname = 'Director'
+        user_account.save()
+        
+        user.groups.add(director_role)
+        responsibility = UserRoleResponsibility.objects.create(user=user_account, role=director_role)
+    
+    try:
+        User.objects.get(username='sector')
+    except User.DoesNotExist:
+        user = User.objects.create_user('sector', 'panuta@gmail.com', 'password')
         user.save()
         
         user_account = user.get_profile()
         user_account.firstname = 'Sector'
+        user_account.lastname = 'Manager'
+        user_account.save()
+        
+        user.groups.add(sector_manager_role)
+        responsibility = UserRoleResponsibility.objects.create(user=user_account, role=sector_manager_role)
+        responsibility.sectors.add(sector1)
+    
+    try:
+        User.objects.get(username='assistant')
+    except User.DoesNotExist:
+        user = User.objects.create_user('assistant', 'panuta@gmail.com', 'password')
+        user.save()
+        
+        user_account = user.get_profile()
+        user_account.firstname = 'Manager'
         user_account.lastname = 'Assistant'
         user_account.save()
         
@@ -151,13 +179,13 @@ def after_syncdb(sender, **kwargs):
         responsibility.programs.add(program102_01)
     
     try:
-        User.objects.get(username='program1')
+        User.objects.get(username='program')
     except User.DoesNotExist:
-        user = User.objects.create_user('program1', 'panuta@gmail.com', 'password')
+        user = User.objects.create_user('program', 'panuta@gmail.com', 'password')
         user.save()
         
         user_account = user.get_profile()
-        user_account.firstname = 'Program1'
+        user_account.firstname = 'Project'
         user_account.lastname = 'Manager'
         user_account.save()
         
@@ -166,57 +194,19 @@ def after_syncdb(sender, **kwargs):
         responsibility.programs.add(program101_01)
     
     try:
-        User.objects.get(username='program2')
+        User.objects.get(username='program_assistant')
     except User.DoesNotExist:
-        user = User.objects.create_user('program2', 'panuta@gmail.com', 'password')
+        user = User.objects.create_user('program_assistant', 'panuta@gmail.com', 'password')
         user.save()
         
         user_account = user.get_profile()
-        user_account.firstname = 'Program2'
-        user_account.lastname = 'Manager'
+        user_account.firstname = 'Project'
+        user_account.lastname = 'Assistant'
         user_account.save()
         
-        user.groups.add(program_manager_role)
-        responsibility = UserRoleResponsibility.objects.create(user=user_account, role=program_manager_role)
-        responsibility.programs.add(program102_01)
-    
-    
-    """
-    
-    # Create sector assistant
-    try:
-        User.objects.get(username='assistant1')
-    except User.DoesNotExist:
-        user = User.objects.create_user('assistant1', 'panuta@gmail.com', 'password')
-        user.save()
-        
-        user_account = user.get_profile()
-        user_account.first_name = 'Sector'
-        user_account.last_name = 'Assistant'
-        user_account.sector = sector1
-        user_account.save()
-        
-        user.groups.add(sector_manager_assistant_role)
-        responsibility = UserRoleResponsibility.objects.create(user=user_account, role=sector_manager_assistant_role)
-        responsibility.sectors.add(sector1)
-        responsibility.projects.add(project101_01)
-        responsibility.projects.add(project102_01)
-        
-    try:
-        User.objects.get(username='project1')
-    except User.DoesNotExist:
-        user = User.objects.create_user('project1', 'panuta@gmail.com', 'password')
-        user.save()
-        
-        user_account = user.get_profile()
-        user_account.first_name = 'Project'
-        user_account.last_name = 'Manager'
-        user_account.save()
-        
-        user.groups.add(project_manager_role)
-        responsibility = UserRoleResponsibility.objects.create(user=user_account, role=project_manager_role)
-        responsibility.projects.add(project101_01)
-    """
+        user.groups.add(program_manager_assistant_role)
+        responsibility = UserRoleResponsibility.objects.create(user=user_account, role=program_manager_assistant_role)
+        responsibility.programs.add(program101_01)
     
 from django.db.models.signals import post_syncdb
 post_syncdb.connect(after_syncdb, dispatch_uid="domain.management")

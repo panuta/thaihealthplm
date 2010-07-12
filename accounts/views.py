@@ -55,10 +55,8 @@ def view_first_time_login(request):
     next = request.GET.get('next', '')
     return render_response(request, "registration/first_time_login.html", {'form':form, 'next':next})
 
+@login_required
 def view_user_settings(request):
-    
-    #ChangeProfileForm
-    
     if request.method == 'POST':
         if 'profile_button' in request.POST and request.POST.get('profile_button'):
             form_profile = ChangeUserProfileForm(request.POST)
