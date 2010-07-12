@@ -53,7 +53,7 @@ def display_header_navigation(user, MEDIA_URL):
         elif primary_role.name == 'sector_manager':
             responsibility = UserRoleResponsibility.objects.get(user=user.get_profile(), role=primary_role)
             sector = responsibility.sectors.all()[0]
-            html = html + '<a href="%s"><img src="%s/images/base/nav_front.png" /> ภาพรวมสำนัก %d</a>' % (reverse('view_sector_overview', args=[sector.id]), MEDIA_URL, sector.id)
+            html = html + '<a href="%s"><img src="%s/images/base/nav_front.png" /> ภาพรวมสำนัก %d</a>' % (reverse('view_sector_overview', args=[sector.ref_no]), MEDIA_URL, sector.ref_no)
         
         elif primary_role.name == 'sector_manager_assistant':
             html = html + '<a href="%s"><img src="%s/images/base/nav_front.png" /> หน้าแรก</a>' % (reverse('view_dashboard'), MEDIA_URL)

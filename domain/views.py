@@ -28,20 +28,20 @@ def view_organization(request):
     return render_response(request, 'organization.html', {'sectors':sectors, 'master_plans':master_plans})
 
 @login_required
-def view_sector_overview(request, sector_id):
-    sector = get_object_or_404(Sector, pk=sector_id)
+def view_sector_overview(request, sector_ref_no):
+    sector = get_object_or_404(Sector, ref_no=sector_ref_no)
     sector_master_plans = SectorMasterPlan.objects.filter(sector=sector).order_by('master_plan__ref_no')
     master_plans = [sector_master_plan.master_plan for sector_master_plan in sector_master_plans]
     
     return render_page_response(request, 'overview', 'page_sector/sector_overview.html', {'sector':sector, 'master_plans':master_plans})
 
-def view_sector_progress(request, sector_id):
+def view_sector_progress(request, sector_ref_no):
     return render_page_response(request, 'progress', 'page_sector/sector_progress.html', {'sector':sector, })
 
-def view_sector_kpi(request, sector_id):
+def view_sector_kpi(request, sector_ref_no):
     return render_page_response(request, 'kpi', 'page_sector/sector_kpi.html', {'sector':sector, })
 
-def view_sector_budget(request, sector_id):
+def view_sector_budget(request, sector_ref_no):
     return render_page_response(request, 'budget', 'page_sector/sector_budget.html', {'sector':sector, })
 
 #
@@ -49,8 +49,8 @@ def view_sector_budget(request, sector_id):
 #
 
 @login_required
-def view_master_plan_overview(request, master_plan_id):
-    master_plan = get_object_or_404(MasterPlan, pk=master_plan_id)
+def view_master_plan_overview(request, master_plan_ref_no):
+    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
     current_date = date.today()
     
     # Plans
@@ -62,26 +62,26 @@ def view_master_plan_overview(request, master_plan_id):
     #master_plan = finance_functions.overview_master_plan_finance(master_plan)
     return render_page_response(request, 'overview', 'page_sector/master_plan_overview.html', {'master_plan': master_plan})
 
-def view_master_plan_progress(request, master_plan_id):
+def view_master_plan_progress(request, master_plan_ref_no):
     return render_page_response(request, 'progress', 'page_sector/master_plan_progress.html', {'master_plan':master_plan, })
 
-def view_master_plan_kpi(request, master_plan_id):
+def view_master_plan_kpi(request, master_plan_ref_no):
     return render_page_response(request, 'kpi', 'page_sector/master_plan_kpi.html', {'master_plan':master_plan, })
 
-def view_master_plan_budget(request, master_plan_id):
+def view_master_plan_budget(request, master_plan_ref_no):
     return render_page_response(request, 'budget', 'page_sector/master_plan_budget.html', {'master_plan':master_plan, })
 
 #
 # MASTER PLAN MANAGEMENT #######################################################################
 #
 
-def view_master_plan_manage_organization(request, master_plan_id):
-    master_plan = get_object_or_404(MasterPlan, pk=master_plan_id)
+def view_master_plan_manage_organization(request, master_plan_ref_no):
+    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
     
     return render_page_response(request, 'organization', 'page_sector/manage_master_plan/manage_organization.html', {'master_plan':master_plan, })
 
-def view_master_plan_manage_kpi(request, master_plan_id):
-    master_plan = get_object_or_404(MasterPlan, pk=master_plan_id)
+def view_master_plan_manage_kpi(request, master_plan_ref_no):
+    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
     
     return render_page_response(request, 'kpi', 'page_sector/manage_master_plan/manage_kpi.html', {'master_plan':master_plan, })
 

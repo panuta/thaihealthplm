@@ -21,7 +21,7 @@ def view_dashboard(request):
         
         elif primary_role.name == 'sector_manager':
             responsibility = UserRoleResponsibility.objects.get(user=request.user.get_profile(), role=primary_role)
-            return redirect('view_sector_overview', (responsibility.sectors.all()[0].id))
+            return redirect('view_sector_overview', (responsibility.sectors.all()[0].ref_no))
         
         elif primary_role.name == 'sector_manager_assistant':
             return _view_sector_manager_assistant_homepage(request)

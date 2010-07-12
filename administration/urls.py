@@ -6,11 +6,11 @@ urlpatterns = patterns('administration.views',
 	# Organization
 	url(r'^administration/organization/$', 'view_administration_organization', name='view_administration_organization'),
 	url(r'^administration/organization/sector/add/$', 'view_administration_organization_add_sector', name='view_administration_organization_add_sector'),
-	url(r'^administration/organization/sector/(?P<sector_id>\d+)/edit/$', 'view_administration_organization_edit_sector', name='view_administration_organization_edit_sector'),
-	url(r'^administration/organization/sector/(?P<sector_id>\d+)/delete/$', 'view_administration_organization_delete_sector', name='view_administration_organization_delete_sector'),
+	url(r'^administration/organization/sector/(?P<sector_ref_no>\d+)/edit/$', 'view_administration_organization_edit_sector', name='view_administration_organization_edit_sector'),
+	url(r'^administration/organization/sector/(?P<sector_ref_no>\d+)/delete/$', 'view_administration_organization_delete_sector', name='view_administration_organization_delete_sector'),
 	url(r'^administration/organization/masterplan/add/$', 'view_administration_organization_add_masterplan', name='view_administration_organization_add_masterplan'),
-	url(r'^administration/organization/masterplan/(?P<master_plan_id>\d+)/edit/$', 'view_administration_organization_edit_masterplan', name='view_administration_organization_edit_masterplan'),
-	url(r'^administration/organization/masterplan/(?P<master_plan_id>\d+)/delete/$', 'view_administration_organization_delete_masterplan', name='view_administration_organization_delete_masterplan'),
+	url(r'^administration/organization/masterplan/(?P<master_plan_ref_no>\d+)/edit/$', 'view_administration_organization_edit_masterplan', name='view_administration_organization_edit_masterplan'),
+	url(r'^administration/organization/masterplan/(?P<master_plan_ref_no>\d+)/delete/$', 'view_administration_organization_delete_masterplan', name='view_administration_organization_delete_masterplan'),
 	
 	# Users
 	url(r'^administration/users/$', 'view_administration_users', name='view_administration_users'),

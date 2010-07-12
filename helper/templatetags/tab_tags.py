@@ -24,16 +24,16 @@ def tabs_for_sector(page, sector):
     html = ''
     
     if page == 'overview': html = html + '<li class="selected">ภาพรวม</li>'
-    else: html = html + '<li><a href="%s">ภาพรวม</a></li>' % reverse('view_sector_overview', args=[sector.id])
+    else: html = html + '<li><a href="%s">ภาพรวม</a></li>' % reverse('view_sector_overview', args=[sector.ref_no])
     
     if page == 'progress': html = html + '<li class="selected">ความก้าวหน้า</li>'
-    else: html = html + '<li><a href="%s">ความก้าวหน้า</a></li>' % reverse('view_sector_progress', args=[sector.id])
+    else: html = html + '<li><a href="%s">ความก้าวหน้า</a></li>' % reverse('view_sector_progress', args=[sector.ref_no])
     
     if page == 'kpi': html = html + '<li class="selected">แผนผลลัพธ์</li>'
-    else: html = html + '<li><a href="%s">แผนผลลัพธ์</a></li>' % reverse('view_sector_kpi', args=[sector.id])
+    else: html = html + '<li><a href="%s">แผนผลลัพธ์</a></li>' % reverse('view_sector_kpi', args=[sector.ref_no])
     
     if page == 'budget': html = html + '<li class="selected">แผนการเงิน</li>'
-    else: html = html + '<li><a href="%s">แผนการเงิน</a></li>' % reverse('view_sector_budget', args=[sector.id])
+    else: html = html + '<li><a href="%s">แผนการเงิน</a></li>' % reverse('view_sector_budget', args=[sector.ref_no])
     
     return _generate_tabs(html)
 
@@ -42,16 +42,16 @@ def tabs_for_master_plan(page, master_plan):
     html = ''
     
     if page == 'overview': html = html + '<li class="selected">ภาพรวม</li>'
-    else: html = html + '<li><a href="%s">ภาพรวม</a></li>' % reverse('view_master_plan_overview', args=[master_plan.id])
+    else: html = html + '<li><a href="%s">ภาพรวม</a></li>' % reverse('view_master_plan_overview', args=[master_plan.ref_no])
     
     if page == 'progress': html = html + '<li class="selected">ความก้าวหน้า</li>'
-    else: html = html + '<li><a href="%s">ความก้าวหน้า</a></li>' % reverse('view_master_plan_progress', args=[master_plan.id])
+    else: html = html + '<li><a href="%s">ความก้าวหน้า</a></li>' % reverse('view_master_plan_progress', args=[master_plan.ref_no])
     
     if page == 'kpi': html = html + '<li class="selected">แผนผลลัพธ์</li>'
-    else: html = html + '<li><a href="%s">แผนผลลัพธ์</a></li>' % reverse('view_master_plan_kpi', args=[master_plan.id])
+    else: html = html + '<li><a href="%s">แผนผลลัพธ์</a></li>' % reverse('view_master_plan_kpi', args=[master_plan.ref_no])
     
     if page == 'budget': html = html + '<li class="selected">แผนการเงิน</li>'
-    else: html = html + '<li><a href="%s">แผนการเงิน</a></li>' % reverse('view_master_plan_budget', args=[master_plan.id])
+    else: html = html + '<li><a href="%s">แผนการเงิน</a></li>' % reverse('view_master_plan_budget', args=[master_plan.ref_no])
     
     return _generate_tabs(html)
 
@@ -60,10 +60,10 @@ def tabs_for_manage_master_plan(page, master_plan):
     html = ''
     
     if page == 'organization': html = html + '<li class="selected">แผนงาน/โครงการ</li>'
-    else: html = html + '<li><a href="%s">แผนงาน/โครงการ</a></li>' % reverse('view_master_plan_manage_organization', args=[master_plan.id])
+    else: html = html + '<li><a href="%s">แผนงาน/โครงการ</a></li>' % reverse('view_master_plan_manage_organization', args=[master_plan.ref_no])
     
     if page == 'kpi': html = html + '<li class="selected">ตัวชี้วัด</li>'
-    else: html = html + '<li><a href="%s">ตัวชี้วัด</a></li>' % reverse('view_master_plan_manage_kpi', args=[master_plan.id])
+    else: html = html + '<li><a href="%s">ตัวชี้วัด</a></li>' % reverse('view_master_plan_manage_kpi', args=[master_plan.ref_no])
     
     return _generate_tabs(html)
 

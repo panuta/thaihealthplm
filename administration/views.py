@@ -65,10 +65,9 @@ def view_administration_organization_add_sector(request):
     return render_page_response(request, 'organization', 'page_administration/manage_organization_modify_sector.html', {'form':form})
 
 @login_required
-def view_administration_organization_edit_sector(request, sector_id):
+def view_administration_organization_edit_sector(request, sector_ref_no):
     if not request.user.is_superuser: return access_denied(request)
-
-    sector = get_object_or_404(Sector, pk=sector_id)
+    sector = get_object_or_404(Sector, ref_no=sector_ref_no)
 
     if request.method == 'POST':
         form = ModifySectorForm(request.POST)
@@ -86,10 +85,9 @@ def view_administration_organization_edit_sector(request, sector_id):
     return render_page_response(request, 'organization', 'page_administration/manage_organization_modify_sector.html', {'sector':sector, 'form':form})
 
 @login_required
-def view_administration_organization_delete_sector(request, sector_id):
+def view_administration_organization_delete_sector(request, sector_ref_no):
     if not request.user.is_superuser: return access_denied(request)
-
-    sector = get_object_or_404(Sector, pk=sector_id)
+    sector = get_object_or_404(Sector, ref_no=sector_ref_no)
     
     if not SectorMasterPlan.objects.filter(sector=sector).count():
         sector.delete()
@@ -102,7 +100,7 @@ def view_administration_organization_delete_sector(request, sector_id):
 @login_required
 def view_administration_organization_add_masterplan(request):
     if not request.user.is_superuser: return access_denied(request)
-
+    
     if request.method == 'POST':
         form = ModifyMasterPlanForm(request.POST)
         if form.is_valid():
@@ -124,10 +122,9 @@ def view_administration_organization_add_masterplan(request):
     return render_page_response(request, 'organization', 'page_administration/manage_organization_modify_master_plan.html', {'form':form, 'has_sectors':has_sectors})
 
 @login_required
-def view_administration_organization_edit_masterplan(request, master_plan_id):
+def view_administration_organization_edit_masterplan(request, master_plan_ref_no):
     if not request.user.is_superuser: return access_denied(request)
-
-    master_plan = get_object_or_404(MasterPlan, pk=master_plan_id)
+    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
 
     if request.method == 'POST':
         form = ModifyMasterPlanForm(request.POST)
@@ -153,10 +150,9 @@ def view_administration_organization_edit_masterplan(request, master_plan_id):
     return render_page_response(request, 'organization', 'page_administration/manage_organization_modify_master_plan.html', {'master_plan':master_plan, 'form':form, 'has_sectors':has_sectors})
 
 @login_required
-def view_administration_organization_delete_masterplan(request, master_plan_id):
+def view_administration_organization_delete_masterplan(request, master_plan_ref_no):
     if not request.user.is_superuser: return access_denied(request)
-
-    master_plan = get_object_or_404(MasterPlan, pk=master_plan_id)
+    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
 
     if not Plan.objects.filter(master_plan=master_plan).count():
         master_plan.delete()

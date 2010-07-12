@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -69,6 +70,7 @@ def view_user_settings(request):
                 user_account.lastname = lastname
                 user_account.save()
                 
+                messages.success(request, 'แก้ไขข้อมูลผู้ใช้เรียบร้อย')
                 return redirect('view_user_settings')
         
         if 'password_button' in request.POST and request.POST.get('password_button'):
@@ -81,6 +83,7 @@ def view_user_settings(request):
                 user.set_password(password1)
                 user.save()
                 
+                messages.success(request, 'เปลี่ยนรหัสผ่านเรียบร้อย')
                 return redirect('view_user_settings')
     
     else:

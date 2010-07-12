@@ -3,20 +3,20 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('domain.views',
     # Sector
     url(r'^organization/$', 'view_organization', name='view_organization'),
-    url(r'^sector/(?P<sector_id>\d+)/$', 'view_sector_overview', name='view_sector_overview'),
-    url(r'^sector/(?P<sector_id>\d+)/progress/$', 'view_sector_progress', name='view_sector_progress'),
-    url(r'^sector/(?P<sector_id>\d+)/kpi/$', 'view_sector_kpi', name='view_sector_kpi'),
-    url(r'^sector/(?P<sector_id>\d+)/budget/$', 'view_sector_budget', name='view_sector_budget'),
+    url(r'^sector/(?P<sector_ref_no>\d+)/$', 'view_sector_overview', name='view_sector_overview'),
+    url(r'^sector/(?P<sector_ref_no>\d+)/progress/$', 'view_sector_progress', name='view_sector_progress'),
+    url(r'^sector/(?P<sector_ref_no>\d+)/kpi/$', 'view_sector_kpi', name='view_sector_kpi'),
+    url(r'^sector/(?P<sector_ref_no>\d+)/budget/$', 'view_sector_budget', name='view_sector_budget'),
     
     # Master Plan
-    url(r'^master_plan/(?P<master_plan_id>\d+)/$', 'view_master_plan_overview', name='view_master_plan_overview'),
-    url(r'^master_plan/(?P<master_plan_id>\d+)/progress/$', 'view_master_plan_progress', name='view_master_plan_progress'),
-    url(r'^master_plan/(?P<master_plan_id>\d+)/kpi/$', 'view_master_plan_kpi', name='view_master_plan_kpi'),
-    url(r'^master_plan/(?P<master_plan_id>\d+)/budget/$', 'view_master_plan_budget', name='view_master_plan_budget'),
+    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/$', 'view_master_plan_overview', name='view_master_plan_overview'),
+    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/progress/$', 'view_master_plan_progress', name='view_master_plan_progress'),
+    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/kpi/$', 'view_master_plan_kpi', name='view_master_plan_kpi'),
+    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/budget/$', 'view_master_plan_budget', name='view_master_plan_budget'),
     
     # Master Plan Management
-    url(r'^master_plan/(?P<master_plan_id>\d+)/manage/organization/$', 'view_master_plan_manage_organization', name='view_master_plan_manage_organization'),
-    url(r'^master_plan/(?P<master_plan_id>\d+)/manage/kpi/$', 'view_master_plan_manage_kpi', name='view_master_plan_manage_kpi'),
+    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/manage/organization/$', 'view_master_plan_manage_organization', name='view_master_plan_manage_organization'),
+    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/manage/kpi/$', 'view_master_plan_manage_kpi', name='view_master_plan_manage_kpi'),
     
     
     #url(r'^master_plan/(?P<master_plan_id>\d+)/plans/$', 'view_master_plan_plans', name='view_master_plan_plans'),
