@@ -79,8 +79,8 @@ def display_master_plan_management_header(user, master_plan):
     return unicode('<div class="supertitle"><a href="%s">แผน %d - %s</a></div><h1>จัดการแผนหลัก</h1>', 'utf-8') % (reverse('view_master_plan_overview', args=[master_plan.ref_no]), master_plan.ref_no, master_plan.name)
 
 @register.simple_tag
-def display_program_header(user, master_plan):
-    pass
+def display_program_header(user, program):
+    return unicode('<div class="supertitle"><a href="%s">แผน %d - %s</a></div><h1>แผนงาน (%s) %s</h1>', 'utf-8') % (reverse('view_master_plan_overview', args=[program.plan.master_plan.ref_no]), program.plan.master_plan.ref_no, program.plan.master_plan.name, program.ref_no, program.name)
 
 @register.simple_tag
 def display_project_header(user, master_plan):

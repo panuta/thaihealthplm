@@ -113,9 +113,9 @@ function initializeRowEvents(row_obj) {
     <div class="error_message invalid_input" style="display:none;">ข้อมูลไม่ครบถ้วนหรือไม่อยู่ในรูปแบบที่ถูกต้อง</div>
     
     <div class="manage_program_budget">
-        <table>
+        <table class="ss_table">
             <tr>
-                <th class="actions"></th>
+                <th class="controls"></th>
                 <th class="grant_column">ตัวเลขคาดการณ์</th>
                 <th class="schedule_on_column">วันที่เบิกจ่าย</th>
                 <th></th>
@@ -123,7 +123,7 @@ function initializeRowEvents(row_obj) {
             {% if schedules %}
                 {% for schedule in schedules %}
                 <tr class="schedule" id="schedule-{{schedule.id}}">
-                    <td class="actions"><a href="#" class="remove-schedule">ลบ</a></td>
+                    <td class="controls"><a href="#" class="remove-schedule">ลบ</a></td>
                     <td class="grant_column"><input type="text" value="{{schedule.grant_budget|intcomma}}"/> บาท</td>
                     <td class="schedule_on_column">
                         <span class="yui_date_picker_panel">

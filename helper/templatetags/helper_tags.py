@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 from django import template
+from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.template import NodeList
 
@@ -146,4 +147,30 @@ def display_pagination(objects, url_name):
     else:
         return ''
 
-
+@register.simple_tag
+def generate_quarter_table_header(quarter_year):
+    from helper.constants import THAI_MONTH_ABBR_NAME
+    
+    start_month = settings.QUARTER_START_MONTH
+    end_month = settings.QUARTER_START_MONTH + 2
+    if end_month > 12: end_month = end_month - 12
+    
+    html = ''
+    for i in range(1, 5):
+        year = quarter_year
+        
+        if start_month >= settings.QUARTER_START_MONTH and not settings.QUARTER_LOWER_YEAR_NUMBER:
+            year = quarter_year - 1
+        
+        if start_month < settings.QUARTER_START_MONTH and settings.QUARTER_LOWER_YEAR_NUMBER:
+            year = quarter_year + 1
+        
+        html = html + '<th colspan="2">ไตรมาสที่ %d (%s - %s %d)</th>' % (i, THAI_MONTH_ABBR_NAME[start_month], THAI_MONTH_ABBR_NAME[end_month], year+543)
+        
+        start_month = start_month + 3
+        if start_month > 12: start_month = start_month - 12
+        
+        end_month = end_month + 3
+        if end_month > 12: end_month = end_month - 12
+    
+    return html

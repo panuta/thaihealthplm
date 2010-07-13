@@ -68,7 +68,7 @@ def tabs_for_manage_master_plan(page, master_plan):
     return _generate_tabs(html)
 
 @register.simple_tag
-def tabs_for_program(page, program):
+def tabs_for_program(page, user, program):
     html = ''
     
     if page == 'overview': html = html + '<li class="selected">ภาพรวม</li>'

@@ -36,18 +36,6 @@ def view_sector_overview(request, sector_ref_no):
     
     return render_page_response(request, 'overview', 'page_sector/sector_overview.html', {'sector':sector, 'master_plans':master_plans})
 
-def view_sector_progress(request, sector_ref_no):
-    sector = get_object_or_404(Sector, ref_no=sector_ref_no)
-    return render_page_response(request, 'progress', 'page_sector/sector_progress.html', {'sector':sector, })
-
-def view_sector_kpi(request, sector_ref_no):
-    sector = get_object_or_404(Sector, ref_no=sector_ref_no)
-    return render_page_response(request, 'kpi', 'page_sector/sector_kpi.html', {'sector':sector, })
-
-def view_sector_budget(request, sector_ref_no):
-    sector = get_object_or_404(Sector, ref_no=sector_ref_no)
-    return render_page_response(request, 'budget', 'page_sector/sector_budget.html', {'sector':sector, })
-
 #
 # MASTER PLAN #######################################################################
 #
@@ -66,22 +54,11 @@ def view_master_plan_overview(request, master_plan_ref_no):
     #master_plan = finance_functions.overview_master_plan_finance(master_plan)
     return render_page_response(request, 'overview', 'page_sector/master_plan_overview.html', {'master_plan': master_plan})
 
-def view_master_plan_progress(request, master_plan_ref_no):
-    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
-    return render_page_response(request, 'progress', 'page_sector/master_plan_progress.html', {'master_plan':master_plan, })
-
-def view_master_plan_kpi(request, master_plan_ref_no):
-    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
-    return render_page_response(request, 'kpi', 'page_sector/master_plan_kpi.html', {'master_plan':master_plan, })
-
-def view_master_plan_budget(request, master_plan_ref_no):
-    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
-    return render_page_response(request, 'budget', 'page_sector/master_plan_budget.html', {'master_plan':master_plan, })
-
 #
 # MASTER PLAN MANAGEMENT #######################################################################
 #
 
+@login_required
 def view_master_plan_manage_organization(request, master_plan_ref_no):
     master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
     
@@ -98,6 +75,7 @@ def view_master_plan_manage_organization(request, master_plan_ref_no):
     
     return render_page_response(request, 'organization', 'page_sector/manage_master_plan/manage_organization.html', {'master_plan':master_plan, 'plans':plans})
 
+@login_required
 def view_master_plan_add_plan(request, master_plan_ref_no):
     master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
     
@@ -117,6 +95,7 @@ def view_master_plan_add_plan(request, master_plan_ref_no):
     
     return render_page_response(request, 'organization', 'page_sector/manage_master_plan/manage_modify_plan.html', {'master_plan':master_plan, 'form':form})
 
+@login_required
 def view_master_plan_edit_plan(request, plan_id):
     plan = get_object_or_404(Plan, pk=plan_id)
     master_plan = plan.master_plan
@@ -139,6 +118,7 @@ def view_master_plan_edit_plan(request, plan_id):
     
     return render_page_response(request, 'organization', 'page_sector/manage_master_plan/manage_modify_plan.html', {'master_plan':master_plan, 'plan':plan, 'form':form})
 
+@login_required
 def view_master_plan_delete_plan(request, plan_id):
     plan = get_object_or_404(Plan, pk=plan_id)
     master_plan = plan.master_plan
@@ -172,6 +152,8 @@ def view_master_plan_add_program(request, master_plan_ref_no):
                 plan=form.cleaned_data['plan'],
                 ref_no=form.cleaned_data['ref_no'],
                 name=form.cleaned_data['name'],
+                abbr_name=form.cleaned_data['abbr_name'],
+                manager_name=form.cleaned_data['manager_name'],
                 start_date=form.cleaned_data['start_date'],
                 end_date=form.cleaned_data['end_date'],
                 )
@@ -198,6 +180,8 @@ def view_master_plan_edit_program(request, program_id):
             program.plan = form.cleaned_data['plan']
             program.ref_no = form.cleaned_data['ref_no']
             program.name = form.cleaned_data['name']
+            program.abbr_name = form.cleaned_data['abbr_name']
+            program.manager_name = form.cleaned_data['manager_name']
             program.start_date = form.cleaned_data['start_date']
             program.end_date = form.cleaned_data['end_date']
             program.save()
@@ -206,7 +190,7 @@ def view_master_plan_edit_program(request, program_id):
             return redirect('view_master_plan_manage_organization', (master_plan.id))
         
     else:
-        form = MasterPlanProgramForm(master_plan=master_plan, initial={'program_id':program.id, 'plan':program.plan.id, 'ref_no':program.ref_no, 'name':program.name, 'description':program.description, 'start_date':program.start_date, 'end_date':program.end_date})
+        form = MasterPlanProgramForm(master_plan=master_plan, initial={'program_id':program.id, 'plan':program.plan.id, 'ref_no':program.ref_no, 'name':program.name, 'abbr_name':program.abbr_name, 'description':program.description, 'start_date':program.start_date, 'end_date':program.end_date})
     
     return render_page_response(request, 'organization', 'page_sector/manage_master_plan/manage_modify_program.html', {'master_plan':master_plan, 'program':program, 'form':form})
 
@@ -241,24 +225,6 @@ def view_program_overview(request, program_id):
     program = get_object_or_404(Program, pk=program_id)
     
     return render_page_response(request, 'overview', 'page_program/program_overview.html', {'program':program, })
-
-@login_required
-def view_program_progress(request, program_id):
-    program = get_object_or_404(Program, pk=program_id)
-    
-    return render_page_response(request, 'progress', 'page_program/program_progress.html', {'program':program, })
-
-@login_required
-def view_program_kpi(request, program_id):
-    program = get_object_or_404(Program, pk=program_id)
-    
-    return render_page_response(request, 'kpi', 'page_program/program_kpi.html', {'program':program, })
-
-@login_required
-def view_program_budget(request, program_id):
-    program = get_object_or_404(Program, pk=program_id)
-    
-    return render_page_response(request, 'budget', 'page_program/program_budget.html', {'program':program, })
 
 #
 # PROJECT #######################################################################

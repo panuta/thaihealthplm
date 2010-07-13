@@ -8,10 +8,16 @@ from django.shortcuts import get_object_or_404, redirect
 
 from models import *
 
-from domain.models import Program
+from budget.models import ProgramBudgetSchedule
+from domain.models import MasterPlan, Plan, Program
 
 from helper import utilities, permission
 from helper.shortcuts import render_page_response, access_denied
+
+@login_required
+def view_sector_budget(request, sector_ref_no):
+    sector = get_object_or_404(Sector, ref_no=sector_ref_no)
+    return render_page_response(request, 'budget', 'page_sector/sector_budget.html', {'sector':sector, })
 
 @login_required
 def view_master_plan_program_budget(request, program_id):
@@ -79,3 +85,38 @@ def view_master_plan_program_budget(request, program_id):
         budget_schedule.schedule_quarter = utilities.find_quarter_number(budget_schedule.schedule_on)
     
     return render_page_response(request, 'organization', 'page_sector/manage_master_plan/manage_program_budget.html', {'master_plan':master_plan, 'program':program, 'schedules':budget_schedules})
+
+@login_required
+def view_master_plan_budget(request, master_plan_ref_no):
+    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
+    plans = Plan.objects.filter(master_plan=master_plan).order_by('ref_no')
+    
+    current_year = date.today().year
+    has_programs = False
+    
+    for plan in plans:
+        programs = Program.objects.filter(plan=plan).order_by('ref_no')
+        
+        for program in programs:
+            quarters = {1:{'grant':0,'claim':0}, 2:{'grant':0,'claim':0}, 3:{'grant':0,'claim':0}, 4:{'grant':0,'claim':0}}
+            for schedule in ProgramBudgetSchedule.objects.filter(program=program, schedule_on__year=current_year):
+                quarter_number = utilities.find_quarter_number(schedule.schedule_on)
+                quarters[quarter_number]['grant'] = quarters[quarter_number]['grant'] + schedule.grant_budget
+                quarters[quarter_number]['claim'] = quarters[quarter_number]['claim'] + schedule.claim_budget
+            
+            program.quarters = quarters
+        
+        if programs: has_programs = True
+        plan.programs = programs
+    
+    return render_page_response(request, 'budget', 'page_sector/master_plan_budget.html', {'current_year':current_year, 'master_plan':master_plan, 'plans':plans, 'has_programs':has_programs})
+
+@login_required
+def view_program_budget(request, program_id):
+    program = get_object_or_404(Program, pk=program_id)
+    schedules = ProgramBudgetSchedule.objects.filter(program=program).order_by('schedule_on')
+    return render_page_response(request, 'budget', 'page_program/program_budget.html', {'program':program, 'schedules':schedules})
+
+@login_required
+def view_budget_overview(request, schedule_id):
+    pass

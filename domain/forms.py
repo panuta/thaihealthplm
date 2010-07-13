@@ -84,6 +84,8 @@ class MasterPlanProgramForm(forms.Form):
 	plan = PlanChoiceField(label="กลุ่มแผนงาน")
 	ref_no = forms.CharField(max_length=64, label='เลขที่แผนงาน')
 	name = forms.CharField(max_length=1024, label='ชื่อแผนงาน')
+	abbr_name = forms.CharField(max_length=200, label='ชื่อย่อแผนงาน')
+	manager_name = forms.CharField(max_length=300, label='ผู้ดูแลแผนงาน')
 	start_date = forms.DateField(widget=YUICalendar(attrs={'id':'id_start_date'}), label='ระยะเวลา', required=False)
 	end_date = forms.DateField(widget=YUICalendar(attrs={'id':'id_end_date'}), label='ถึง', required=False)
 	

@@ -14,7 +14,7 @@ urlpatterns = patterns('',
     (r'^', include('thaihealthplm.homepage.urls')),
     (r'^', include('thaihealthplm.budget.urls')),
     (r'^', include('thaihealthplm.kpi.urls')),
-    #(r'^', include('thaihealthplm.progress.urls')),
+    (r'^', include('thaihealthplm.progress.urls')),
     
     (r'^accounts/', include('registration.backends.default.urls')),
     

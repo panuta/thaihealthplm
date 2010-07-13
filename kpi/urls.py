@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('kpi.views',
+    url(r'^sector/(?P<sector_ref_no>\d+)/kpi/$', 'view_sector_kpi', name='view_sector_kpi'),
     
     # Manage - Master Plan - KPI
     url(r'^master_plan/(?P<master_plan_id>\d+)/manage/kpi/$', 'view_master_plan_manage_kpi', name='view_master_plan_manage_kpi'),
@@ -18,9 +19,9 @@ urlpatterns = patterns('kpi.views',
     url(r'^master_plan/manage/program/(?P<program_id>\d+)/kpi/$', 'view_master_plan_program_kpi', name='view_master_plan_program_kpi'),
     
     
-    #url(r'^master_plan/(?P<master_plan_id>\d+)/kpi/$', 'view_master_plan_kpi', name='view_master_plan_kpi'),
+    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/kpi/$', 'view_master_plan_kpi', name='view_master_plan_kpi'),
     
-    #url(r'^project/(?P<project_id>\d+)/kpi/$', 'view_project_kpi', name='view_project_kpi'),
+    url(r'^program/(?P<program_id>\d+)/kpi/$', 'view_program_kpi', name='view_program_kpi'),
     
     #url(r'^kpi/(?P<schedule_id>\d+)/$', 'view_kpi_overview', name='view_kpi_overview'),
 )

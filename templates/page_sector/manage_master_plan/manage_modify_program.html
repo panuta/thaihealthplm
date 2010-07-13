@@ -35,11 +35,21 @@
             <div class="input LONG">{{form.name}}</div>
             {{form.name.errors}}
         </li>
+		<li>
+            <label for="id_abbr_name" class="caption">{{form.abbr_name.label}}</label>
+            <div class="input MEDIUM">{{form.abbr_name}}</div>
+            {{form.abbr_name.errors}}
+        </li>
         <li class="date_period">
             <label class="caption">{{form.start_date.label}}</label>
             <div class="input">{{form.start_date}} <span class="to">{{form.end_date.label}}</span> {{form.end_date}}</div>
             {{form.start_date.errors}}
             {{form.end_date.errors}}
+        </li>
+		<li>
+            <label for="id_manager_name" class="caption">{{form.manager_name.label}}</label>
+            <div class="input MEDIUM">{{form.manager_name}}</div>
+            {{form.manager_name.errors}}
         </li>
     </ul>
     {{form.program_id}}
