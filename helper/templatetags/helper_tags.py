@@ -1,10 +1,11 @@
 # -*- encoding: utf-8 -*-
 from django import template
-register = template.Library()
-
 from django.core.urlresolvers import reverse
+from django.template import NodeList
 
-from helper import utilities
+from helper import utilities, permission
+
+register = template.Library()
 
 # DATE TIME #################################################################
 
@@ -54,6 +55,63 @@ def display_messages(messages):
         return '<ul class="ss_messages">%s</ul>' % html
     else:
         return ''
+
+# PERMISSION
+
+class AccessNode(template.Node):
+    """
+    Parameter
+    user : django.contrib.auth.user object
+    permission names : string represents permission names
+    object : object to be accessed
+    
+    Permission Names Guide
+    - Use ',' to separate between permission
+    - Use '+' in front of permission list to indicate that all permissions listed must meet
+    """
+    
+    def __init__(self, nodelist_true, nodelist_false, user, permission_name, obj):
+        self.nodelist_true = nodelist_true
+        self.nodelist_false = nodelist_false
+        self.user = template.Variable(user)
+        self.permission_names = permission_name.strip(' \"\'')
+        self.obj = template.Variable(obj)
+    
+    def render(self, context):
+        user = self.user.resolve(context)
+        permission_names = self.permission_names
+        obj = self.obj.resolve(context)
+        
+        at_least_one_permission = True
+        if permission_names[0] == '+':
+            at_least_one_permission = False
+            permission_names = permission_names[1:]
+        
+        permission_names = [permission_name.strip() for permission_name in permission_names.split(',')]
+        
+        if permission.access_obj(user, permission_names, obj, at_least_one_permission):
+            output = self.nodelist_true.render(context)
+            return output
+        else:
+            output = self.nodelist_false.render(context)
+            return output
+
+@register.tag(name="access")
+def do_access(parser, token):
+    try:
+        tag_name, user, permission_names, obj = token.split_contents()
+    except ValueError:
+        raise template.TemplateSyntaxError, "Responsible tag raise ValueError"
+    
+    nodelist_true = parser.parse(('else', 'endaccess'))
+    token = parser.next_token()
+    if token.contents == 'else':
+        nodelist_false = parser.parse(('endaccess',))
+        parser.delete_first_token()
+    else:
+        nodelist_false = NodeList()
+    
+    return AccessNode(nodelist_true, nodelist_false, user, permission_names, obj)
 
 # TEMPLATE #################################################################
 @register.simple_tag

@@ -16,7 +16,13 @@ urlpatterns = patterns('domain.views',
     
     # Master Plan Management
     url(r'^master_plan/(?P<master_plan_ref_no>\d+)/manage/organization/$', 'view_master_plan_manage_organization', name='view_master_plan_manage_organization'),
-    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/manage/kpi/$', 'view_master_plan_manage_kpi', name='view_master_plan_manage_kpi'),
+    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/manage/plan/add/$', 'view_master_plan_add_plan', name='view_master_plan_add_plan'),
+    url(r'^master_plan/manage/plan/(?P<plan_id>\d+)/edit/$', 'view_master_plan_edit_plan', name='view_master_plan_edit_plan'),
+    url(r'^master_plan/manage/plan/(?P<plan_id>\d+)/delete/$', 'view_master_plan_delete_plan', name='view_master_plan_delete_plan'),
+    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/manage/program/add/$', 'view_master_plan_add_program', name='view_master_plan_add_program'),
+    url(r'^master_plan/manage/program/(?P<program_id>\d+)/edit/$', 'view_master_plan_edit_program', name='view_master_plan_edit_program'),
+    url(r'^master_plan/manage/program/(?P<program_id>\d+)/delete/$', 'view_master_plan_delete_program', name='view_master_plan_delete_program'),
+    
     
     
     #url(r'^master_plan/(?P<master_plan_id>\d+)/plans/$', 'view_master_plan_plans', name='view_master_plan_plans'),

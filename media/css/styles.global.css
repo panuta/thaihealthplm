@@ -5,7 +5,7 @@
 .ss_no_information {font-size:116%;color:#666;margin:10px 0px 20px;}
 
 a:link, a:visited, a:active {color:#07A;}
-a:hover {color:#FFF;background-color:#960;}
+a:hover {color:#FFF;background-color:#369;}
 
 #body-header {background-color:#CFC;padding:5px 10px;border-bottom:4px solid #888;}
 #body-header .logo {float:left;}
@@ -17,7 +17,7 @@ a:hover {color:#FFF;background-color:#960;}
 #body-header .right_panel .account .username {color:#444;margin-right:8px;}
 #body-header .right_panel .navigation {font-size:108%;margin-bottom:5px;}
 #body-header .right_panel .navigation a {background-color:#7A7;color:#FFF;text-decoration:none;padding:3px 10px;margin-left:15px;}
-#body-header .right_panel .navigation a:hover {background-color:#960;}
+#body-header .right_panel .navigation a:hover {background-color:#369;}
 
 #body-title {background-color:#666;padding:8px 15px;}
 #body-title h1 {margin-top:4px;font-size:138.5%;font-weight:bold;color:#FFF;}
@@ -37,9 +37,13 @@ a:hover {color:#FFF;background-color:#960;}
 
 #body-content {padding:15px;}
 
+.ss_page_error_message {font-size:131%;color:#333;text-align:center;margin:30px 0px;}
+.ss_page_error_message img {margin-bottom:10px;}
+
 /* Breadcrumbs */
 .ss_breadcrumbs .breadcrumbs {margin-bottom:8px;}
 .ss_breadcrumbs h2 {font-size:146.5%;margin-bottom:20px;padding-bottom:5px;border-bottom:5px solid #CCC;}
+.ss_breadcrumbs .supertitle {margin:5px 0px;font-size:108%;color:#555;}
 .ss_breadcrumbs .subtitle {margin:10px 0px 5px;color:#444;}
 
 /* Messages */
@@ -74,6 +78,8 @@ a:hover {color:#FFF;background-color:#960;}
 .ss_table .controls img {margin:0px 4px;}
 .ss_table .controls a:hover {background:none !important;}
 
+.ss_table .table_no_information {font-size:116%;color:#666;padding:15px 10px 15px;}
+
 /* Form */
 .ss_form ul {margin-left:30px;}
 .ss_form li {margin-bottom:20px;}
@@ -92,6 +98,13 @@ a:hover {color:#FFF;background-color:#960;}
 .ss_form .button_panel {margin:20px 0px 20px 30px;}
 .ss_form .button_panel button {padding:3px 25px;font-size:116%;border-top:1px solid #CCC;border-left:1px solid #CCC;border-bottom:1px solid #999;border-right:1px solid #999;background-color:#369;color:#FFF;}
 .ss_form .button_panel a {margin-left:20px;}
+
+.ss_form .date_period .to {margin:0px 15px;color:#555;}
+
+.calendarbox {border:1px solid #999;}
+.yui_date_picker_panel input {color:#333;width:160px;}
+.yui_date_picker_panel img {vertical-align:middle;cursor:pointer;margin-left:5px;}
+
 
 
 /*

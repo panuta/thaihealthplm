@@ -36,9 +36,9 @@ def display_header_navigation(user):
             html = html + '<a href="%s"><img src="%s/images/base/nav_front.png" /> หน้าแรก</a>' % (reverse('view_dashboard'), settings.MEDIA_URL)
     
     if user.is_superuser:
-        html = html + '<a href="%s">จัดการระบบ</a>' % reverse('view_administration')
+        html = html + '<a href="%s"><img src="%s/images/base/admin.png" class="icon"/> จัดการระบบ</a>' % (reverse('view_administration'), settings.MEDIA_URL)
     
-    html = html + '<a href="%s">ผังองค์กร</a>' % reverse('view_organization')
+    html = html + '<a href="%s"><img src="%s/images/base/org_chart.png" class="icon"/> ผังองค์กร</a>' % (reverse('view_organization'), settings.MEDIA_URL)
     
     return html
 
@@ -55,6 +55,8 @@ def display_sector_header(user, sector):
     header_html = header_html + unicode('</div><h1>สำนัก %d - %s</h1>', 'utf-8') % (sector.ref_no, sector.name)
     return header_html
 
+from helper import permission
+
 @register.simple_tag
 def display_master_plan_header(user, master_plan):
     header_html = '<div class="supertitle">'
@@ -66,7 +68,10 @@ def display_master_plan_header(user, master_plan):
     
     header_html = header_html + ' | '.join(sector_list)
     header_html = header_html + unicode('</div><h1>แผน %d - %s</h1>', 'utf-8') % (master_plan.ref_no, master_plan.name)
-    header_html = header_html + unicode('<div class="subtitle"><img src="%s/images/icons/settings.png" class="icon" /> <a href="%s">จัดการแผนหลัก</a></div>', 'utf-8') % (settings.MEDIA_URL, reverse('view_master_plan_manage_organization', args=[master_plan.ref_no]))
+    
+    if permission.access_obj(user, 'master_plan manage', master_plan):
+        header_html = header_html + unicode('<div class="subtitle"><img src="%s/images/icons/settings.png" class="icon" /> <a href="%s">จัดการแผนหลัก</a></div>', 'utf-8') % (settings.MEDIA_URL, reverse('view_master_plan_manage_organization', args=[master_plan.ref_no]))
+    
     return header_html
 
 @register.simple_tag

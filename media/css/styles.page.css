@@ -61,3 +61,38 @@
  */
 
 .sector_overview_page {}
+
+
+/*
+ * MASTER PLAN
+ */
+
+.master_plan_manage table .plan {background-color:#DDD;}
+.master_plan_manage table .date_span {width:180px;text-align:center;}
+.master_plan_manage table .date_span .to {margin:5px 0px;color:#666;}
+
+.master_plan_manage table .title {color:#666;font-size:93%;margin-bottom:5px;}
+
+.master_plan_manage table .subcontrols {font-size:85%;margin:15px 0px 5px;}
+.master_plan_manage table .subcontrols a {color:#666;}
+.master_plan_manage table .subcontrols a.delete-program {color:#C30 !important;}
+.master_plan_manage table .subcontrols a:hover {color:#FFF;}
+.master_plan_manage table .subcontrols a.delete-program:hover {color:#FFF !important;}
+.master_plan_manage table .subcontrols span {margin:0px 5px;}
+
+.master_plan_manage .manage_program_kpi {}
+
+.master_plan_manage .manage_program_budget table {width:100%;}
+.master_plan_manage .manage_program_budget table th {border:1px solid #999;font-size:116%;padding:8px 10px;background-color:#777;color:#FFF;}
+.master_plan_manage .manage_program_budget table td {border:1px solid #999;padding:12px 10px;}
+.master_plan_manage .manage_program_budget table .actions {width:60px;text-align:center;}
+.master_plan_manage .manage_program_budget table .grant_column {width:200px;}
+.master_plan_manage .manage_program_budget table .grant_column input {width:160px;text-align:right;margin-right:5px;}
+.master_plan_manage .manage_program_budget table .grant_column input.invalid {background-color:#FCC;}
+.master_plan_manage .manage_program_budget table .schedule_on_column {width:210px;}
+.master_plan_manage .manage_program_budget table .schedule_on_column input.invalid {background-color:#FCC;}
+.master_plan_manage .manage_program_budget .button_panel {margin-left:0px !important;}
+
+
+
+

@@ -24,6 +24,11 @@ def format_full_month_year(datetime):
 def format_abbr_month_year(datetime):
     return "%s %d" % (unicode(THAI_MONTH_ABBR_NAME[datetime.month], "utf-8"), datetime.year + 543)
 
+# QUARTER
+def find_quarter_number(date):
+    month_elapse = date.month - settings.QUARTER_START_MONTH
+    if month_elapse < 0: month_elapse = month_elapse + 12
+    return month_elapse / 3 + 1
 
 # AUTH UTILITIES
 allow_password_chars = '0123456789'

@@ -115,6 +115,16 @@ def after_syncdb(sender, **kwargs):
     SectorMasterPlan.objects.get_or_create(sector=sector8, master_plan=master_plan13)
     SectorMasterPlan.objects.get_or_create(sector=sector9, master_plan=master_plan13)
     
+    #
+    # Permission ##################
+    #
+    
+    PermissionName.objects.get_or_create(
+        permission='master_plan manage', name='จัดการแผนหลัก')
+    
+    
+    AdminPermission.objects.get_or_create(permission='master_plan manage')
+    
     """
     END HERE
     """

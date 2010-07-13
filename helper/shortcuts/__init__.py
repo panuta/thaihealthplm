@@ -10,4 +10,4 @@ def render_page_response(request, page, *args, **kwargs):
 	return render_to_response(*args, **kwargs)
 
 def access_denied(request):
-	return render_response(request, 'system/access_denied.html')
+	return render_response(request, 'access_denied.html')

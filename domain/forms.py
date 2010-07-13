@@ -2,7 +2,7 @@
 from django import forms
 from django.forms.util import ErrorList
 
-from domain.models import Sector, MasterPlan, Plan, Project, Activity
+from domain.models import *
 
 from widgets import YUICalendar
 
@@ -71,7 +71,7 @@ class ModifyPlanForm(forms.Form):
 		
 		return cleaned_data
 
-class MasterPlanProjectForm(forms.Form):
+class MasterPlanProgramForm(forms.Form):
 	def __init__(self, *args, **kwargs):
 		master_plan = kwargs.pop('master_plan', None)
 		forms.Form.__init__(self, *args, **kwargs)
@@ -80,7 +80,7 @@ class MasterPlanProjectForm(forms.Form):
 			self.fields["plan"].queryset = Plan.objects.filter(master_plan=master_plan).order_by('master_plan__ref_no', 'ref_no')
 			self.master_plan = master_plan
 	
-	project_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
+	program_id = forms.IntegerField(widget=forms.HiddenInput(), required=False)
 	plan = PlanChoiceField(label="กลุ่มแผนงาน")
 	ref_no = forms.CharField(max_length=64, label='เลขที่แผนงาน')
 	name = forms.CharField(max_length=1024, label='ชื่อแผนงาน')
@@ -97,13 +97,13 @@ class MasterPlanProjectForm(forms.Form):
 			del cleaned_data['start_date']
 		
 		ref_no = cleaned_data.get('ref_no')
-		project_id = cleaned_data.get('project_id')
+		program_id = cleaned_data.get('program_id')
 		
-		if project_id: existing = Project.objects.filter(ref_no=ref_no, parent_project=None, master_plan=self.master_plan).exclude(id=project_id).count()
-		else: existing = Project.objects.filter(ref_no=ref_no, parent_project=None, master_plan=self.master_plan).count()
+		if program_id: existing = Program.objects.filter(ref_no=ref_no, plan__master_plan=self.master_plan).exclude(id=program_id).count()
+		else: existing = Program.objects.filter(ref_no=ref_no, plan__master_plan=self.master_plan).count()
 		
 		if existing:
-			self._errors['ref_no'] = ErrorList(['เลขที่แผนงานนี้ซ้ำกับแผนงานอื่นในสำนัก'])
+			self._errors['ref_no'] = ErrorList(['เลขที่แผนงานนี้ซ้ำกับแผนงานอื่นในแผนหลัก'])
 			del cleaned_data['ref_no']
 		
 		return cleaned_data
