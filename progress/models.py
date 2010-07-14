@@ -68,6 +68,7 @@ class ActivityProgress(models.Model):
     progress = models.IntegerField(default=0)
     current_situation = models.CharField(max_length=500)
     summary = models.TextField()
+    detail = models.TextField()
 
 class ActivityDocument(models.Model):
     activity = models.ForeignKey('domain.Activity')

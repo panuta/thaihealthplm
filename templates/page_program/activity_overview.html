@@ -1,0 +1,68 @@
+{% extends 'page_base.html' %}
+{% load helper_tags i18n %}
+
+{% block html_head %}
+	<script type="text/javascript">
+		function enable_textbox() {
+			$('input[name=activity_progress_on_progress_percentage]').removeAttr('disabled');
+		}
+		function disable_textbox() {
+			$('input[name=activity_progress_on_progress_percentage]').attr('disabled', true);
+		}
+
+		$(document).ready(function() {
+			var percent = {{ form.progress_percentage }};
+			if (percent == 100) {
+				$('#radio3').attr('checked', true);
+			} else if (percent < 100 && percent > 0) {
+				$('#radio2').attr('checked', true);
+				$('input[name=activity_progress_on_progress_percentage]').removeAttr('disabled');
+			} else {
+				$('#radio1').attr('checked', true);
+			}
+		});
+	</script>
+{% endblock %}
+
+{% block body_subtitle %}{{ activity.project.name }}{% endblock %}
+{% block body_title %}{{ activity.name }}{% endblock %}
+
+{% block body_content %}
+	<form method="post" enctype="multipart/form-data">
+		<h2>Activity Progress</h2>
+			<input type="radio" name="activity_progress" id="radio1" value="NOT_YET_STARTED" onclick="disable_textbox()" />
+			<label>Not yet started</label>
+			<input type="radio" name="activity_progress" id="radio2" value="ON_PROGRESS" onclick="enable_textbox()" />
+			<label>On progress</label>
+			<input type="text" name="activity_progress_on_progress_percentage" size="1" disabled="true" value="{{ form.progress_percentage }}" /> %
+			<input type="radio" name="activity_progress" id="radio3" value="COMPLETED" onclick="disable_textbox()" />
+			<label>Completed</label>
+		<h2>Current Situation</h2>
+			<input type="text" name="activity_progress_current_situation" size="80" value="{{ form.current_situation }}" />
+		<h2>Summary</h2>
+			<textarea name="activity_progress_summary" cols="80" rows="3">{{ form.summary }}</textarea>
+		<h2>Details</h2>
+			<textarea name="activity_progress_detail" cols="80" rows="10">{{ form.detail }}</textarea>
+		<h2>Attachments</h2>
+			<input type="file" name="activity_progress_file_attachment" value="Browse" />
+		<div id="attachments">
+			{% if not form.docs|length_is:"0" %}
+				<table border="1">
+					<tr>
+						<th>Document name</th>
+						<th>Sent date</th>
+					</tr>
+				{% for doc in form.docs %}
+					<tr>
+						<td>{{ doc.document_name }}</td>
+						<td>{{ doc.created }}</td>
+					</tr>
+				{% endfor %}
+				</table>
+			{% endif %}
+		</div>
+		<br /><br />
+		<input type="submit" value="Save" /> or <a href="#">Cancel</a>
+		{% csrf_token %}
+	</form>
+{% endblock %}
