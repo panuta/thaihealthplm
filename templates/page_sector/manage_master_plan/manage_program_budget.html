@@ -157,6 +157,7 @@ function initializeRowEvents(row_obj) {
         
         <form action="." method="POST" class="ss_form">
         	{% csrf_token %}
+			{% back_form request %}
             <div class="button_panel"><button type="submit">บันทึกการแก้ไข</button></div>
         </form>
     </div>

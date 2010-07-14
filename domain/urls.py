@@ -7,6 +7,7 @@ urlpatterns = patterns('domain.views',
     
     # Master Plan
     url(r'^master_plan/(?P<master_plan_ref_no>\d+)/$', 'view_master_plan_overview', name='view_master_plan_overview'),
+    url(r'^master_plan/(?P<master_plan_ref_no>\d+)/programs/$', 'view_master_plan_programs', name='view_master_plan_programs'),
     
     # Master Plan Management
     url(r'^master_plan/(?P<master_plan_ref_no>\d+)/manage/organization/$', 'view_master_plan_manage_organization', name='view_master_plan_manage_organization'),

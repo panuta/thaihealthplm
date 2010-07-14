@@ -79,7 +79,7 @@ def view_master_plan_program_budget(request, program_id):
                 ProjectBudgetScheduleRevision.objects.filter(schedule=budget_schedule).delete()
                 budget_schedule.delete()
         
-        return redirect('view_master_plan_manage_organization', (master_plan.id))
+        return utilities.redirect_or_back('view_master_plan_manage_organization', (master_plan.ref_no), request)
         
     for budget_schedule in budget_schedules:
         budget_schedule.schedule_quarter = utilities.find_quarter_number(budget_schedule.schedule_on)

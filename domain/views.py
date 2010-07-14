@@ -43,16 +43,20 @@ def view_sector_overview(request, sector_ref_no):
 @login_required
 def view_master_plan_overview(request, master_plan_ref_no):
     master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
+    
+    return render_page_response(request, 'overview', 'page_sector/master_plan_overview.html', {'master_plan': master_plan})
+
+@login_required
+def view_master_plan_programs(request, master_plan_ref_no):
+    master_plan = get_object_or_404(MasterPlan, ref_no=master_plan_ref_no)
     current_date = date.today()
     
     # Plans
     plans = Plan.objects.filter(master_plan=master_plan)
     for plan in plans:
-        plan.current_projects = Project.objects.filter(plan=plan, start_date__lte=current_date, end_date__gte=current_date).order_by('ref_no')
-
-    master_plan.plans = plans
-    #master_plan = finance_functions.overview_master_plan_finance(master_plan)
-    return render_page_response(request, 'overview', 'page_sector/master_plan_overview.html', {'master_plan': master_plan})
+        plan.programs = Program.objects.filter(plan=plan).order_by('ref_no')
+    
+    return render_page_response(request, 'programs', 'page_sector/master_plan_programs.html', {'master_plan': master_plan, 'plans':plans})
 
 #
 # MASTER PLAN MANAGEMENT #######################################################################
@@ -159,7 +163,7 @@ def view_master_plan_add_program(request, master_plan_ref_no):
                 )
             
             messages.success(request, u'เพิ่มแผนงาน/โครงการเรียบร้อย')
-            return redirect('view_master_plan_manage_organization', (master_plan.id))
+            return redirect('view_master_plan_manage_organization', (master_plan.ref_no))
         
     else:
         form = MasterPlanProgramForm(master_plan=master_plan)
@@ -187,7 +191,7 @@ def view_master_plan_edit_program(request, program_id):
             program.save()
             
             messages.success(request, u'แก้ไขแผนงาน/โครงการเรียบร้อย')
-            return redirect('view_master_plan_manage_organization', (master_plan.id))
+            return redirect('view_master_plan_manage_organization', (master_plan.ref_no))
         
     else:
         form = MasterPlanProgramForm(master_plan=master_plan, initial={'program_id':program.id, 'plan':program.plan.id, 'ref_no':program.ref_no, 'name':program.name, 'abbr_name':program.abbr_name, 'description':program.description, 'start_date':program.start_date, 'end_date':program.end_date})
@@ -214,7 +218,7 @@ def view_master_plan_delete_program(request, program_id):
         program.delete()
         messages.success(request, u'ลบแผนงาน/โครงการเรียบร้อย')
     
-    return redirect('view_master_plan_manage_organization', (master_plan.id))
+    return redirect('view_master_plan_manage_organization', (master_plan.ref_no))
 
 #
 # PROGRAM #######################################################################

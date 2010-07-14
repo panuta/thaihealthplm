@@ -114,7 +114,33 @@ def do_access(parser, token):
     
     return AccessNode(nodelist_true, nodelist_false, user, permission_names, obj)
 
+# BACK TO PAGE #################################################################
+
+@register.simple_tag
+def back_to_this(request):
+    back_list = request.GET.getlist('back')
+    
+    if back_list:
+        return 'back=%s&back=%s' % (request.path, '&back='.join(request.GET.getlist('back')))
+    else:
+        return 'back=%s' % request.path
+
+@register.simple_tag
+def back_form(request):
+    back_list = request.GET.getlist('back')
+    
+    str = ''
+    for back in back_list:
+        if str: str = str + '&'
+        str = str + 'back=%s' % back
+    
+    if str:
+        return '<input type="hidden" name="back" value="%s"/>' % str
+    else:
+        return ''
+
 # TEMPLATE #################################################################
+
 @register.simple_tag
 def display_pagination(objects, url_name):
     if objects.paginator.num_pages != 1:

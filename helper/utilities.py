@@ -36,3 +36,22 @@ random_password_length = 6
 def make_random_user_password():
     from random import choice
     return ''.join([choice(allow_password_chars) for i in range(random_password_length)])
+
+# URL Utilities
+def redirect_or_back(url_name, url_param, request):
+    from django.shortcuts import redirect
+    back_list = request.POST.get('back')
+    
+    if back_list:
+        back_urls = []
+        for back in back_list.split('&'):
+            (text, separator, url) = back.partition('=')
+            back_urls.append(url)
+        
+        redirect_url = back_urls[0]
+        if len(back_urls) > 1:
+            redirect_url = redirect_url + '?back=' + '&back='.join(back_urls[1:])
+        
+        return redirect(redirect_url)
+    else:
+        return redirect(url_name, url_param)

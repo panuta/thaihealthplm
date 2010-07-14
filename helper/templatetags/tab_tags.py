@@ -44,6 +44,9 @@ def tabs_for_master_plan(page, user, master_plan):
     if page == 'overview': html = html + '<li class="selected">ภาพรวม</li>'
     else: html = html + '<li><a href="%s">ภาพรวม</a></li>' % reverse('view_master_plan_overview', args=[master_plan.ref_no])
     
+    if page == 'programs': html = html + '<li class="selected">แผนงาน/โครงการ</li>'
+    else: html = html + '<li><a href="%s">แผนงาน/โครงการ</a></li>' % reverse('view_master_plan_programs', args=[master_plan.ref_no])
+    
     if page == 'progress': html = html + '<li class="selected">ความก้าวหน้า</li>'
     else: html = html + '<li><a href="%s">ความก้าวหน้า</a></li>' % reverse('view_master_plan_progress', args=[master_plan.ref_no])
     
