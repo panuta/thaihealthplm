@@ -1,5 +1,5 @@
 {% extends 'page_base.html' %}
-{% load helper_tags i18n %}
+{% load helper_tags page_tags %}
 
 {% block html_head %}
 	<script type="text/javascript">
@@ -24,8 +24,7 @@
 	</script>
 {% endblock %}
 
-{% block body_subtitle %}{{ activity.project.name }}{% endblock %}
-{% block body_title %}{{ activity.name }}{% endblock %}
+{% block body_title %}{% display_activity_header user activity %}{% endblock %}
 
 {% block body_content %}
 	<form method="post" enctype="multipart/form-data">

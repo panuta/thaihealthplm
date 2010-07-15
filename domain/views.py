@@ -238,16 +238,12 @@ def view_program_overview(request, program_id):
 @login_required
 def view_project_overview(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
-    current_date = date.today()
-
-    if not project.parent_project:
-        current_projects = Project.objects.filter(parent_project=project, start_date__lte=current_date, end_date__gte=current_date)
-        report_submissions = ReportSubmission.objects.filter(project=project).filter(Q(state=APPROVE_ACTIVITY) | (Q(state=SUBMIT_ACTIVITY) & (Q(report__need_approval=False) | Q(report__need_checkup=False)))).order_by('-schedule_date')[:5]
-        return render_response(request, 'page_project/project_overview.html', {'project':project, 'current_projects':current_projects, 'report_submissions':report_submissions})
-
-    else:
-        current_activities = Activity.objects.filter(project=project, start_date__lte=current_date, end_date__gte=current_date)
-        return render_response(request, 'page_project/project_overview.html', {'project':project, 'current_activities':current_activities})
+    if project.plan:
+        project.parent = project.plan
+    elif project.program:
+        project.parent = project.program
+    ctx = {'project': project}
+    return render_page_response(request, 'overview', 'page_program/project_overview.html', ctx)
 
 #
 # ACTIVITY #######################################################################

@@ -90,6 +90,8 @@ def tabs_for_program(page, user, program):
 
 @register.simple_tag
 def tabs_for_project(page, project):
+    html = ''
+    
     if page == 'overview': html = html + '<li class="selected">ภาพรวม</li>'
     else: html = html + '<li><a href="%s">ภาพรวม</a></li>' % reverse('view_project_overview', args=[project.id])
     

@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from accounts.models import UserRoleResponsibility, GroupDetails
-from domain.models import SectorMasterPlan
+from domain.models import SectorMasterPlan, Plan, Program
 
 # TEMPLATE #################################################################
 
@@ -83,12 +83,15 @@ def display_program_header(user, program):
     return unicode('<div class="supertitle"><a href="%s">แผน %d - %s</a></div><h1>แผนงาน (%s) %s</h1>', 'utf-8') % (reverse('view_master_plan_overview', args=[program.plan.master_plan.ref_no]), program.plan.master_plan.ref_no, program.plan.master_plan.name, program.ref_no, program.name)
 
 @register.simple_tag
-def display_project_header(user, master_plan):
-    pass
+def display_project_header(user, project):
+    if isinstance(project.parent, Plan):
+        return unicode('<div class="supertitle"><a href="%s">แผน %d - %s</a></div><h1>แผนงาน (%s) %s</h1>', 'utf-8') % (reverse('view_project_overview', args=[project.plan.master_plan.ref_no]), project.plan.master_plan.ref_no, project.plan.master_plan.name, project.ref_no, project.name)
+    #elif isinstance(project.parent, Program):
+    #    return unicode('<div class="supertitle"><a href="%s">แผน %d - %s</a></div><h1>แผนงาน (%s) %s</h1>', 'utf-8') % (reverse('view_project_overview', args=[project.program.plan.master_plan.ref_no]), project.program.plan.master_plan.ref_no, project.program.plan.master_plan.name, project.ref_no, project.name)
 
 @register.simple_tag
-def display_activity_header(user, master_plan):
-    pass
+def display_activity_header(user, activity):
+    return unicode('<div class="supertitle"><a href="%s">แผน %d - %s</a></div><h1>แผนงาน (%s) %s</h1>', 'utf-8') % (reverse('view_master_plan_overview', args=[program.plan.master_plan.ref_no]), program.plan.master_plan.ref_no, program.plan.master_plan.name, program.ref_no, program.name)
 
 # ADMIN PAGE
 
