@@ -251,65 +251,7 @@ def view_project_overview(request, project_id):
 
 @login_required
 def view_activity_overview(request, activity_id):
-    activity = get_object_or_404(Activity, pk=activity_id)
-    if request.method == 'POST':
-        activity_progress = request.POST['activity_progress']
-        if activity_progress == 'COMPLETED':
-            progress = 100
-        elif activity_progress == 'ON_PROGRESS':
-            progress = request.POST['activity_progress_on_progress_percentage']
-            if not progress.isdigit():
-                progress = 0
-        else:
-            progress = 0
-
-        current_situation = request.POST['activity_progress_current_situation']
-        summary = request.POST['activity_progress_summary']
-        detail = request.POST['activity_progress_detail']
-
-        activity_progress = ActivityProgress.objects.filter(activity=activity)
-        if activity_progress.count() > 0:
-            activity_progress = activity_progress[0]
-            activity_progress.progress = progress
-            activity_progress.current_situation = current_situation
-            activity_progress.summary = summary
-            activity_progress.detail = detail
-        else:
-            activity_progress = ActivityProgress(activity=activity,
-                                                 progress=progress,
-                                                 current_situation=current_situation,
-                                                 summary=summary,
-                                                 detail=detail)
-        activity_progress.save()
-
-        if request.FILES:
-            document_name = request.FILES['activity_progress_file_attachment']
-            activity_doc = ActivityDocument(activity=activity,
-                                            document_name=document_name,
-                                            created_by=request.user.get_profile())
-            activity_doc.save()
-
-        messages.success(request, 'The activity progress has been saved.')
-
-        activity_docs = ActivityDocument.objects.filter(activity=activity)
-        form = {'progress_percentage': activity_progress.progress,
-                'current_situation': activity_progress.current_situation,
-                'summary': activity_progress.summary,
-                'detail': activity_progress.detail,
-                'docs': activity_docs}
-    else:
-        activity_progress = ActivityProgress.objects.filter(activity=activity)
-        activity_docs = ActivityDocument.objects.filter(activity=activity)
-        if activity_progress.count() > 0:
-            activity_progress = activity_progress[0]
-            form = {'progress_percentage': activity_progress.progress,
-                    'current_situation': activity_progress.current_situation,
-                    'summary': activity_progress.summary,
-                    'detail': activity_progress.detail,
-                    'docs': activity_docs}
-        else:
-            form = {'progress_percentage': 0}
-
-    ctx = {'activity': activity, 'form': form}
-    return render_response(request, 'page_program/activity_overview.html', ctx)
+    from django.core.urlresolvers import reverse
+    from django.http import HttpResponseRedirect
+    return HttpResponseRedirect(reverse('view_activity_progress', args=[activity_id])) 
 

@@ -84,14 +84,44 @@ def display_program_header(user, program):
 
 @register.simple_tag
 def display_project_header(user, project):
-    if isinstance(project.parent, Plan):
-        return unicode('<div class="supertitle"><a href="%s">แผน %d - %s</a></div><h1>แผนงาน (%s) %s</h1>', 'utf-8') % (reverse('view_project_overview', args=[project.plan.master_plan.ref_no]), project.plan.master_plan.ref_no, project.plan.master_plan.name, project.ref_no, project.name)
-    #elif isinstance(project.parent, Program):
-    #    return unicode('<div class="supertitle"><a href="%s">แผน %d - %s</a></div><h1>แผนงาน (%s) %s</h1>', 'utf-8') % (reverse('view_project_overview', args=[project.program.plan.master_plan.ref_no]), project.program.plan.master_plan.ref_no, project.program.plan.master_plan.name, project.ref_no, project.name)
+    if project.plan:
+        return unicode('<div class="supertitle"><a href="%s">แผน %d - %s</a> - กลุ่มแผนงาน %s</div><h1>โครงการ (%s) %s</h1>', 'utf-8') % \
+            (reverse('view_master_plan_overview', args=[project.plan.master_plan.ref_no]),
+            project.plan.master_plan.ref_no,
+            project.plan.master_plan.name,
+            project.plan.ref_no,
+            project.ref_no,
+            project.name)
+    elif project.program:
+        return unicode('<div class="supertitle"><a href="%s">แผนงาน (%s) %s</a></div><h1>โครงการ (%s) %s</h1>', 'utf-8') % \
+            (reverse('view_program_overview', args=[project.program.id]),
+            project.program.ref_no,
+            project.program.name,
+            project.ref_no,
+            project.name)
 
 @register.simple_tag
 def display_activity_header(user, activity):
-    return unicode('<div class="supertitle"><a href="%s">แผน %d - %s</a></div><h1>แผนงาน (%s) %s</h1>', 'utf-8') % (reverse('view_master_plan_overview', args=[program.plan.master_plan.ref_no]), program.plan.master_plan.ref_no, program.plan.master_plan.name, program.ref_no, program.name)
+    if activity.project.plan:
+        return unicode('<div class="supertitle"><a href="%s">แผน %d - %s</a> - กลุ่มแผนงาน %s - <a href="%s">โครงการ (%s) %s</a></div><h1>กิจกรรม (%s) %s</h1>', 'utf-8') % \
+            (reverse('view_master_plan_overview', args=[activity.project.plan.master_plan.ref_no]),
+            activity.project.plan.master_plan.ref_no,
+            activity.project.plan.master_plan.name,
+            activity.project.plan.ref_no,
+            reverse('view_project_overview', args=[activity.project.id]),
+            activity.project.ref_no,
+            activity.project.name,
+            activity.ref_no,
+            activity.name)
+    elif activity.project.program:
+        return unicode('<div class="supertitle"><a href="%s">แผนงาน %s</a> - <a href="%s">โครงการ (%s) %s</a></div><h1>กิจกรรม (%s) %s</h1>', 'utf-8') % \
+            (reverse('view_program_overview', args=[activity.project.program.id]),
+            activity.project.program.id,
+            reverse('view_project_overview', args=[activity.project.id]),
+            activity.project.ref_no,
+            activity.project.name,
+            activity.ref_no,
+            activity.name)
 
 # ADMIN PAGE
 

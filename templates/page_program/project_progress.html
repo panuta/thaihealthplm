@@ -9,6 +9,27 @@
 
 {% block body_content %}
 <div class="project_progress_page">
-    
+	<h2>Project progress</h2>
+	<form method="post">
+		<input type="radio" name="project_progress" value="CALCULATED" checked="true" />
+		<label>Calculate form activities</label>
+		<input type="radio" name="project_progress" value="NOT_YET_STARTED" />
+		<label>Not yet started</label>
+		<input type="radio" name="project_progress" value="ON_PROGRESS" />
+		<label>On progress</label>
+		<input type="text" size="1" /> %
+		<input type="radio" name="project_progress" value="COMPLETED" />
+		<label>Completed</label>
+		<br /><br />
+		<label>Current situation</label>
+		<input type="text" size="60" />
+		<br /><br />
+		<input type="submit" value="Save" /> or <a href="#">Cancel</a>
+		{% csrf_token %}
+	</form>
+	<h2>Project problems</h2>
+		<input type="button" value="Report problem" />
+	<h2>Project activities</h2>
+		<input type="button" value="Add activity" />
 </div>
 {% endblock %}
